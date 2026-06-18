@@ -62,7 +62,7 @@ describe('coachEngine', () => {
 
   describe('buildChatMessages', () => {
     it('keeps only the last 5 messages plus the new one', () => {
-      const history = Array(10).fill(null).map((_, i) => ({ id: `${i}`, role: 'user' as const, content: `Msg ${i}` }));
+      const history = new Array(10).fill(null).map((_, i) => ({ id: `${i}`, role: 'user' as const, content: `Msg ${i}` }));
       const result = buildChatMessages(mockContext, history, 'New Message');
       
       expect(result.messages.length).toBe(6); // 5 history + 1 new

@@ -88,9 +88,9 @@ export default function CoachChat({
                 <div className="text-sm leading-relaxed whitespace-pre-wrap">
                   {msg.content.split('**').map((part, i) =>
                     i % 2 === 1 ? (
-                      <strong key={i}>{part}</strong>
+                      <strong key={`${msg.id}-b-${part.slice(0, 20)}`}>{part}</strong>
                     ) : (
-                      <span key={i}>{part}</span>
+                      <span key={`${msg.id}-t-${i}-${part.slice(0, 12)}`}>{part}</span>
                     )
                   )}
                 </div>

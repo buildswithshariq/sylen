@@ -118,7 +118,7 @@ export default function SproutCompanion({ context }: SproutCompanionProps) {
                   </>
                 ) : (
                   <>
-                    Your sustainability companion. Click to chat and learn about your carbon footprint!
+                    <span>Your sustainability companion. Click to chat and learn about your carbon footprint!</span>
                     <span className="block mt-2 text-emerald-700/80 italic text-[11px]">
                       Take the assessment to watch Sprout grow! 🌱
                     </span>

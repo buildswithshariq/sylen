@@ -18,7 +18,7 @@ async function verifyData(data: string, signatureHex: string, secret: string) {
   // Convert hex signature back to Uint8Array
   const signatureBytes = new Uint8Array(Math.ceil(signatureHex.length / 2));
   for (let i = 0; i < signatureBytes.length; i++) {
-    signatureBytes[i] = parseInt(signatureHex.substring(i * 2, i * 2 + 2), 16);
+    signatureBytes[i] = Number.parseInt(signatureHex.substring(i * 2, i * 2 + 2), 16);
   }
   
   return await crypto.subtle.verify('HMAC', key, signatureBytes, encoder.encode(data));

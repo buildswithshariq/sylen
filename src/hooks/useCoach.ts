@@ -5,8 +5,54 @@ import { CoachContext, CoachMessage, CoachRole } from '@/types';
 import { generateInitialGreeting } from '@/lib/coachEngine';
 
 /**
+ * Simulates a typewriter streaming effect for a message.
+ * Extracted to reduce nesting depth inside useCoach callbacks.
+ */
+function simulateStream(
+  content: string,
+  msgId: string,
+  setMessages: React.Dispatch<React.SetStateAction<CoachMessage[]>>
+) {
+  let i = 0;
+  const streamInterval = setInterval(() => {
+    i += Math.max(2, Math.floor(content.length / 40));
+    const finished = i >= content.length;
+    const slicedContent = finished ? content : content.slice(0, i);
+
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === msgId
+          ? { ...m, content: slicedContent, isStreaming: !finished }
+          : m
+      )
+    );
+
+    if (finished) {
+      clearInterval(streamInterval);
+    }
+  }, 30);
+}
+
+/**
+ * Determines which generative UI card to attach based on response content.
+ */
+function detectUiCard(content: string): 'priority' | 'breakdown' | 'transport' | undefined {
+  const lower = content.toLowerCase();
+  if (lower.includes('improve') || lower.includes('recommendation') || lower.includes('action')) {
+    return 'priority';
+  }
+  if (lower.includes('breakdown') || lower.includes('source') || lower.includes('explain')) {
+    return 'breakdown';
+  }
+  if (lower.includes('transport') || lower.includes('drive') || lower.includes('fly')) {
+    return 'transport';
+  }
+  return undefined;
+}
+
+/**
  * Hook for managing the AI coach conversation.
- * Simple: single chat, last 5 messages, no streaming.
+ * Simple: single chat, last 5 messages, streaming.
  */
 export function useCoach(context: CoachContext | null) {
   const [messages, setMessages] = useState<CoachMessage[]>([]);
@@ -28,22 +74,7 @@ export function useCoach(context: CoachContext | null) {
       isStreaming: true,
     };
     setMessages([greetingMessage]);
-    
-    let i = 0;
-    const streamInterval = setInterval(() => {
-      i += Math.max(2, Math.floor(greeting.length / 40));
-      if (i >= greeting.length) {
-        i = greeting.length;
-        clearInterval(streamInterval);
-        setMessages((prev) => 
-          prev.map(m => m.id === greetingMessage.id ? { ...m, content: greeting, isStreaming: false } : m)
-        );
-      } else {
-        setMessages((prev) => 
-          prev.map(m => m.id === greetingMessage.id ? { ...m, content: greeting.slice(0, i) } : m)
-        );
-      }
-    }, 30);
+    simulateStream(greeting, greetingMessage.id, setMessages);
   }, [context]);
 
   // Send a message to the coach
@@ -53,7 +84,6 @@ export function useCoach(context: CoachContext | null) {
 
       setError(null);
 
-      // Add user message
       const userMsg: CoachMessage = {
         id: `msg-${Date.now()}`,
         role: 'user',
@@ -65,7 +95,6 @@ export function useCoach(context: CoachContext | null) {
       setIsLoading(true);
 
       try {
-        // Keep last 5 messages for context
         const recentHistory = messages.slice(-5);
 
         const response = await fetch('/api/coach', {
@@ -73,7 +102,7 @@ export function useCoach(context: CoachContext | null) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: userMessage.trim(),
-            context, // can be null
+            context,
             history: recentHistory,
           }),
         });
@@ -102,20 +131,8 @@ export function useCoach(context: CoachContext | null) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunkText = decoder.decode(value, { stream: true });
-          fullContent += chunkText;
-
-          // Process uiCard based on current content
-          const lowerContent = fullContent.toLowerCase();
-          let uiCard: 'priority' | 'breakdown' | 'transport' | undefined;
-          
-          if (lowerContent.includes('improve') || lowerContent.includes('recommendation') || lowerContent.includes('action')) {
-            uiCard = 'priority';
-          } else if (lowerContent.includes('breakdown') || lowerContent.includes('source') || lowerContent.includes('explain')) {
-            uiCard = 'breakdown';
-          } else if (lowerContent.includes('transport') || lowerContent.includes('drive') || lowerContent.includes('fly')) {
-            uiCard = 'transport';
-          }
+          fullContent += decoder.decode(value, { stream: true });
+          const uiCard = detectUiCard(fullContent);
 
           setMessages((prev) =>
             prev.map((m) =>
@@ -130,7 +147,6 @@ export function useCoach(context: CoachContext | null) {
             m.id === msgId ? { ...m, isStreaming: false } : m
           )
         );
-
       } catch (err) {
         setError('Failed to get a response. Please try again.');
         console.error('Coach error:', err);
@@ -148,32 +164,20 @@ export function useCoach(context: CoachContext | null) {
   }, []);
 
   // Push a message directly
-  const pushMessage = useCallback((content: string, role: CoachRole = 'assistant') => {
-    const newMsg: CoachMessage = {
-      id: `msg-${Date.now()}`,
-      role,
-      content,
-      timestamp: Date.now(),
-      isStreaming: true,
-    };
-    setMessages((prev) => [...prev, newMsg]);
-    
-    let i = 0;
-    const streamInterval = setInterval(() => {
-      i += Math.max(2, Math.floor(content.length / 40));
-      if (i >= content.length) {
-        i = content.length;
-        clearInterval(streamInterval);
-        setMessages((prev) => 
-          prev.map(m => m.id === newMsg.id ? { ...m, content, isStreaming: false } : m)
-        );
-      } else {
-        setMessages((prev) => 
-          prev.map(m => m.id === newMsg.id ? { ...m, content: content.slice(0, i) } : m)
-        );
-      }
-    }, 30);
-  }, []);
+  const pushMessage = useCallback(
+    (content: string, role: CoachRole = 'assistant') => {
+      const newMsg: CoachMessage = {
+        id: `msg-${Date.now()}`,
+        role,
+        content: '',
+        timestamp: Date.now(),
+        isStreaming: true,
+      };
+      setMessages((prev) => [...prev, newMsg]);
+      simulateStream(content, newMsg.id, setMessages);
+    },
+    []
+  );
 
   return {
     messages,

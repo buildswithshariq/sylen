@@ -139,8 +139,8 @@ export default function Home() {
             >
               <motion.div variants={fadeUp} custom={0}>
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700 text-sm font-medium shadow-sm">
-                  <span className="text-emerald-600">🌿</span>
-                  Environmental Intelligence Platform
+                  <span className="text-emerald-600">🌿</span>{' '}
+                  <span>Environmental Intelligence Platform</span>
                 </span>
               </motion.div>
 

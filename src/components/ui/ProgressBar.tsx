@@ -16,7 +16,16 @@ export default function ProgressBar({
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   return (
-    <div className="w-full" role="progressbar" aria-valuenow={currentStep + 1} aria-valuemin={1} aria-valuemax={totalSteps}>
+    <div className="w-full">
+      {/* Native progress element for accessibility */}
+      <progress
+        className="sr-only"
+        value={currentStep + 1}
+        max={totalSteps}
+      >
+        Step {currentStep + 1} of {totalSteps}
+      </progress>
+
       {/* Step labels */}
       <div className="mb-3 flex justify-between">
         {STEP_LABELS.map((label, i) => (
