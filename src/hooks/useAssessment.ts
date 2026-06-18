@@ -11,7 +11,7 @@ import {
   LifestyleData,
 } from '@/types';
 
-const STORAGE_KEY = 'ecopilot-assessment';
+const STORAGE_KEY = 'sylen-assessment';
 
 const defaultTransport: TransportData = {
   vehicleType: 'car',
@@ -35,6 +35,7 @@ const defaultLifestyle: LifestyleData = {
   flightsPerYear: 2,
   shoppingFrequency: 'monthly',
   recyclingHabit: 'sometimes',
+  displayName: '',
 };
 
 function loadFromStorage(): AssessmentFormState | null {

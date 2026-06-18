@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import { AssessmentData } from '@/types';
 import GlassCard from '@/components/ui/GlassCard';
 

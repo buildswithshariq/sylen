@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — What-If Simulation Engine
+// Sylen — What-If Simulation Engine
 // Compares current assessment with hypothetical changes.
 // ============================================================
 

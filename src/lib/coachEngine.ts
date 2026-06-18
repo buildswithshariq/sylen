@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Coach Engine (Gemini 2.5 Flash Integration)
+// Sylen — Coach Engine (Gemini 2.5 Flash Integration)
 // Builds structured prompts and manages AI coaching context.
 // AI NEVER calculates — only explains, personalizes, coaches.
 // ============================================================
@@ -12,13 +12,13 @@ import { CoachContext, CoachMessage } from '@/types';
  */
 export function buildSystemPrompt(context: CoachContext | null): string {
   if (!context) {
-    return `You are Sprout 🌱, a friendly and knowledgeable sustainability companion for EcoPilot.
+    return `You are Sprout 🌱, a friendly and knowledgeable sustainability companion for Sylen.
 
 ## YOUR CAPABILITIES
 1. Explain what carbon footprint means
 2. Explain climate change concepts
 3. Explain sustainability habits
-4. Explain how EcoPilot works
+4. Explain how Sylen works
 5. Explain why tracking emissions matters
 6. Answer general environmental questions
 7. Guide users around the platform
@@ -58,8 +58,8 @@ export function buildSystemPrompt(context: CoachContext | null): string {
 6. Explain how the What-If Simulator works and what scenarios are available.
 7. Explain all dashboard metrics and what they mean.
 8. Suggest specific improvements based on the user's data.
-9. Guide users around the EcoPilot platform.
-10. Explain the EcoPilot project mission — making sustainability accessible.
+9. Guide users around the Sylen platform.
+10. Explain the Sylen project mission — making sustainability accessible.
 `;
 
   if (isChampion) {
@@ -71,11 +71,11 @@ export function buildSystemPrompt(context: CoachContext | null): string {
 4. Suggest ways they can inspire their community and lead by example.
 5. Explain the carbon emission breakdown.
 6. Avoid pushing them to 'do more' or 'improve' drastically, instead focus on celebration and maintenance.
-7. Explain the EcoPilot project mission.
+7. Explain the Sylen project mission.
 `;
   }
 
-  return `You are Sprout Coach AI 🌱, a friendly and knowledgeable sustainability coach for EcoPilot. You help people understand and reduce their carbon footprint through practical, encouraging advice.
+  return `You are Sprout Coach AI 🌱, a friendly and knowledgeable sustainability coach for Sylen. You help people understand and reduce their carbon footprint through practical, encouraging advice.
 
 ## USER'S CARBON FOOTPRINT DATA (use these exact numbers)
 
@@ -144,7 +144,7 @@ export function buildChatMessages(
  */
 export function generateInitialGreeting(context: CoachContext | null): string {
   if (!context) {
-    return `Hi! I'm Sprout 🌱\n\nI'm here to help you understand sustainability, carbon footprints, and how EcoPilot works.\n\nYou can ask me questions anytime.\n\n*Tip: Take the assessment to watch my island grow and evolve as you build sustainable habits!*`;
+    return `Welcome to Sylen 🌱\n\nI'm Sprout, your sustainability companion.\n\nYou can ask me questions anytime.\n\n*Tip: Take the assessment to watch my island grow and evolve as you build sustainable habits!*`;
   }
 
   const { score } = context;
@@ -153,7 +153,7 @@ export function generateInitialGreeting(context: CoachContext | null): string {
     return `🏆 Congratulations 🎉\n\nYou are a **Climate Champion** operating at an exceptional sustainability level!\n\nYour island is fully grown! 🌳 I've reviewed your sustainability profile and can help explain your score, recommendations, emissions, and improvement opportunities. My role is to help you maintain your impact and inspire others. How can I assist you today?`;
   }
 
-  return `Welcome back! I'm Sprout Coach AI 🌱\n\nI've reviewed your sustainability profile and can help explain your score, recommendations, emissions, and improvement opportunities.\n\n*Tip: As you improve your score and level up, my island will grow and evolve!* 🪴`;
+  return `Welcome back to Sylen 🌱\n\nI've analyzed your sustainability profile and I'm ready to help.\n\n*Tip: As you improve your score and level up, my island will grow and evolve!* 🪴`;
 }
 
 /**
@@ -165,7 +165,7 @@ export function getFallbackResponse(
   context: CoachContext | null
 ): string {
   if (!context) {
-    return `Hi there! I'm Sprout 🌱. I can help answer questions about sustainability, carbon footprints, and EcoPilot. Try taking the assessment for more personalized insights!`;
+    return `Hi there! I'm Sprout 🌱. I can help answer questions about sustainability, carbon footprints, and Sylen. Try taking the assessment for more personalized insights!`;
   }
 
   const msg = userMessage.toLowerCase();

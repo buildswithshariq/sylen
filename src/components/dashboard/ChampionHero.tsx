@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import GlassCard from '@/components/ui/GlassCard';
 import ScoreRing from '@/components/ui/ScoreRing';
 import Badge from '@/components/ui/Badge';

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type {
   LifestyleData,
   ShoppingFrequency,
@@ -36,6 +36,7 @@ const defaults: LifestyleData = {
   flightsPerYear: 2,
   shoppingFrequency: 'monthly',
   recyclingHabit: 'sometimes',
+  displayName: '',
 };
 
 function merged(data: Partial<LifestyleData>): LifestyleData {
@@ -83,6 +84,7 @@ export default function LifestyleStep({
           min={0}
           max={20}
           step={1}
+          aria-label="Flights per year"
           value={current.flightsPerYear}
           onChange={(e) =>
             update({ flightsPerYear: Number(e.target.value) })
@@ -100,7 +102,7 @@ export default function LifestyleStep({
         <legend className="mb-3 text-sm font-medium text-gray-700">
           How often do you shop for non-essentials?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="How often do you shop for non-essentials?">
           {SHOPPING_OPTIONS.map(({ value, label, description }) => {
             const selected = current.shoppingFrequency === value;
             return (
@@ -114,7 +116,8 @@ export default function LifestyleStep({
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-sm font-medium text-gray-700">
                   {label}
@@ -131,7 +134,7 @@ export default function LifestyleStep({
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Do you recycle?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Do you recycle?">
           {RECYCLING_OPTIONS.map(({ value, label, icon }) => {
             const selected = current.recyclingHabit === value;
             return (
@@ -145,7 +148,8 @@ export default function LifestyleStep({
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-2xl">{icon}</span>
                 <span className="text-sm font-medium text-gray-700">
@@ -155,6 +159,28 @@ export default function LifestyleStep({
             );
           })}
         </div>
+      </fieldset>
+
+      {/* Display Name */}
+      <fieldset className="pt-4 border-t border-gray-100">
+        <label htmlFor="displayName" className="block text-sm font-medium text-gray-700">
+          What should we call you?
+        </label>
+        <p className="mb-3 text-xs text-gray-500">
+          Optional. Used only when sharing your sustainability report.
+        </p>
+        <input
+          id="displayName"
+          type="text"
+          placeholder="Alex"
+          value={current.displayName || ''}
+          onChange={(e) => {
+            // Sanitize: allow only alphanumeric and spaces, max 20 chars
+            const sanitized = e.target.value.replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 20);
+            update({ displayName: sanitized });
+          }}
+          className="w-full rounded-xl border-2 border-transparent bg-white/60 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none transition-colors"
+        />
       </fieldset>
     </div>
   );

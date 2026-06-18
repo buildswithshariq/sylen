@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Recommendation Engine
+// Sylen — Recommendation Engine
 // Rule-based, deterministic. Never random.
 // ============================================================
 

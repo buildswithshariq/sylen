@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { EnergyData, ApplianceUsage } from '@/types';
 
 interface EnergyStepProps {
@@ -66,6 +66,7 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
           min={0}
           max={1000}
           step={10}
+          aria-label="Monthly electricity consumption"
           value={current.monthlyElectricityKwh}
           onChange={(e) =>
             update({ monthlyElectricityKwh: Number(e.target.value) })
@@ -94,6 +95,7 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
           min={0}
           max={24}
           step={1}
+          aria-label="Air conditioning hours per day"
           value={current.acHoursPerDay}
           onChange={(e) =>
             update({ acHoursPerDay: Number(e.target.value) })
@@ -111,7 +113,7 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Appliance usage level
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Appliance usage level">
           {APPLIANCE_OPTIONS.map(({ value, label, description }) => {
             const selected = current.applianceUsage === value;
             return (
@@ -125,7 +127,8 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-sm font-medium text-gray-700">
                   {label}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
-import { CoachContext, CoachMessage } from '@/types';
+import { CoachContext, CoachMessage, CoachRole } from '@/types';
 import { generateInitialGreeting } from '@/lib/coachEngine';
 
 /**
@@ -23,10 +23,27 @@ export function useCoach(context: CoachContext | null) {
     const greetingMessage: CoachMessage = {
       id: `msg-${Date.now()}`,
       role: 'assistant',
-      content: greeting,
+      content: '',
       timestamp: Date.now(),
+      isStreaming: true,
     };
     setMessages([greetingMessage]);
+    
+    let i = 0;
+    const streamInterval = setInterval(() => {
+      i += Math.max(2, Math.floor(greeting.length / 40));
+      if (i >= greeting.length) {
+        i = greeting.length;
+        clearInterval(streamInterval);
+        setMessages((prev) => 
+          prev.map(m => m.id === greetingMessage.id ? { ...m, content: greeting, isStreaming: false } : m)
+        );
+      } else {
+        setMessages((prev) => 
+          prev.map(m => m.id === greetingMessage.id ? { ...m, content: greeting.slice(0, i) } : m)
+        );
+      }
+    }, 30);
   }, [context]);
 
   // Send a message to the coach
@@ -61,24 +78,62 @@ export function useCoach(context: CoachContext | null) {
           }),
         });
 
-        if (!response.ok) {
+        if (!response.ok || !response.body) {
           throw new Error('Failed to get response from coach');
         }
 
-        const data = await response.json();
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let fullContent = '';
 
+        const msgId = `msg-${Date.now() + 1}`;
         const assistantMsg: CoachMessage = {
-          id: `msg-${Date.now() + 1}`,
+          id: msgId,
           role: 'assistant',
-          content: data.content || 'I apologize, I could not generate a response.',
+          content: '',
           timestamp: Date.now(),
+          isStreaming: true,
         };
 
         setMessages((prev) => [...prev, assistantMsg]);
+        setIsLoading(false);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunkText = decoder.decode(value, { stream: true });
+          fullContent += chunkText;
+
+          // Process uiCard based on current content
+          const lowerContent = fullContent.toLowerCase();
+          let uiCard: 'priority' | 'breakdown' | 'transport' | undefined;
+          
+          if (lowerContent.includes('improve') || lowerContent.includes('recommendation') || lowerContent.includes('action')) {
+            uiCard = 'priority';
+          } else if (lowerContent.includes('breakdown') || lowerContent.includes('source') || lowerContent.includes('explain')) {
+            uiCard = 'breakdown';
+          } else if (lowerContent.includes('transport') || lowerContent.includes('drive') || lowerContent.includes('fly')) {
+            uiCard = 'transport';
+          }
+
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === msgId ? { ...m, content: fullContent, uiCard } : m
+            )
+          );
+        }
+
+        // Finish streaming
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msgId ? { ...m, isStreaming: false } : m
+          )
+        );
+
       } catch (err) {
         setError('Failed to get a response. Please try again.');
         console.error('Coach error:', err);
-      } finally {
         setIsLoading(false);
       }
     },
@@ -92,6 +147,34 @@ export function useCoach(context: CoachContext | null) {
     setError(null);
   }, []);
 
+  // Push a message directly
+  const pushMessage = useCallback((content: string, role: CoachRole = 'assistant') => {
+    const newMsg: CoachMessage = {
+      id: `msg-${Date.now()}`,
+      role,
+      content,
+      timestamp: Date.now(),
+      isStreaming: true,
+    };
+    setMessages((prev) => [...prev, newMsg]);
+    
+    let i = 0;
+    const streamInterval = setInterval(() => {
+      i += Math.max(2, Math.floor(content.length / 40));
+      if (i >= content.length) {
+        i = content.length;
+        clearInterval(streamInterval);
+        setMessages((prev) => 
+          prev.map(m => m.id === newMsg.id ? { ...m, content, isStreaming: false } : m)
+        );
+      } else {
+        setMessages((prev) => 
+          prev.map(m => m.id === newMsg.id ? { ...m, content: content.slice(0, i) } : m)
+        );
+      }
+    }, 30);
+  }, []);
+
   return {
     messages,
     isLoading,
@@ -99,5 +182,6 @@ export function useCoach(context: CoachContext | null) {
     sendMessage,
     initializeGreeting,
     clearChat,
+    pushMessage,
   };
 }

@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Type Definitions
+// Sylen — Type Definitions
 // ============================================================
 
 // --- Assessment Data Types ---
@@ -34,6 +34,7 @@ export interface LifestyleData {
   flightsPerYear: number;
   shoppingFrequency: ShoppingFrequency;
   recyclingHabit: RecyclingHabit;
+  displayName?: string;
 }
 
 export interface AssessmentData {
@@ -160,6 +161,8 @@ export interface CoachMessage {
   role: CoachRole;
   content: string;
   timestamp: number;
+  uiCard?: 'priority' | 'breakdown' | 'transport';
+  isStreaming?: boolean;
 }
 
 export interface CoachContext {

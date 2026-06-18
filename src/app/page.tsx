@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { m as motion } from 'framer-motion';
+import TransitionLink from '@/components/ui/TransitionLink';
 
 
 const fadeUp = {
@@ -166,7 +166,7 @@ export default function Home() {
               </motion.p>
 
               <motion.div variants={fadeUp} custom={3} className="flex flex-wrap gap-4">
-                <Link
+                <TransitionLink
                   href="/assessment"
                   className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold 
                     text-white bg-emerald-600 rounded-2xl hover:bg-emerald-700 
@@ -177,15 +177,15 @@ export default function Home() {
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
-                </Link>
-                <Link
+                </TransitionLink>
+                <TransitionLink
                   href="#how-it-works"
                   className="inline-flex items-center gap-2 px-8 py-4 text-base font-medium 
                     text-stone-700 bg-white/60 backdrop-blur-sm rounded-2xl 
                     border border-white/40 hover:bg-white/80 transition-all"
                 >
                   Learn More
-                </Link>
+                </TransitionLink>
               </motion.div>
 
               <motion.div variants={fadeUp} custom={4} className="flex items-center gap-8 pt-4">
@@ -290,7 +290,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
-              How EcoPilot Works
+              How Sylen Works
             </h2>
             <p className="text-lg text-stone-500 max-w-2xl mx-auto">
               Four simple steps to understanding and reducing your environmental impact.
@@ -442,7 +442,7 @@ export default function Home() {
               It takes less than 2 minutes. Understand your impact. Get a personalized plan. 
               Start making a difference today.
             </p>
-            <Link
+            <TransitionLink
               href="/assessment"
               className="inline-flex items-center gap-2 px-10 py-4 text-lg font-semibold 
                 text-white bg-emerald-600 rounded-2xl hover:bg-emerald-700 
@@ -453,7 +453,7 @@ export default function Home() {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </Link>
+            </TransitionLink>
           </motion.div>
         </div>
       </section>

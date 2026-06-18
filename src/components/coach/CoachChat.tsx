@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CoachMessage } from '@/types';
+import { m as motion, AnimatePresence } from 'framer-motion';
+import { CoachMessage, CoachContext } from '@/types';
+import PriorityActions from '@/components/dashboard/PriorityActions';
+import EmissionBreakdown from '@/components/dashboard/EmissionBreakdown';
 
 interface CoachChatProps {
   messages: CoachMessage[];
@@ -10,6 +12,7 @@ interface CoachChatProps {
   error: string | null;
   onSendMessage: (message: string) => void;
   onInitialize: () => void;
+  context?: CoachContext | null;
 }
 
 const quickActions = [
@@ -25,6 +28,7 @@ export default function CoachChat({
   error,
   onSendMessage,
   onInitialize,
+  context,
 }: CoachChatProps) {
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -90,6 +94,28 @@ export default function CoachChat({
                     )
                   )}
                 </div>
+                
+                {/* Generative UI Cards */}
+                <AnimatePresence>
+                  {!msg.isStreaming && msg.uiCard === 'priority' && context && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                      className="pt-4 border-t border-emerald-100/50 overflow-hidden"
+                    >
+                      <PriorityActions recommendations={context.recommendations.slice(0, 3)} compact={true} />
+                    </motion.div>
+                  )}
+                  {!msg.isStreaming && msg.uiCard === 'breakdown' && context && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                      animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                      className="pt-4 border-t border-emerald-100/50 overflow-hidden"
+                    >
+                      <EmissionBreakdown contributions={context.score?.contributions || []} compact={true} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           ))}

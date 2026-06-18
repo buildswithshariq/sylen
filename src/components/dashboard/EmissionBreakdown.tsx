@@ -1,13 +1,14 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { m as motion, useInView } from 'framer-motion';
 import type { CategoryContribution, EmissionCategory } from '@/types';
 import GlassCard from '@/components/ui/GlassCard';
 
 interface EmissionBreakdownProps {
   contributions: CategoryContribution[];
   className?: string;
+  compact?: boolean;
 }
 
 const categoryConfig: Record<
@@ -40,10 +41,12 @@ function BarRow({
   contribution,
   index,
   isInView,
+  compact,
 }: {
   contribution: CategoryContribution;
   index: number;
   isInView: boolean;
+  compact?: boolean;
 }) {
   const config = categoryConfig[contribution.category];
   const barPercent = Math.max(contribution.percentage, 2); // min visible width
@@ -53,19 +56,19 @@ function BarRow({
       {/* Label Row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg" role="img" aria-hidden="true">
+          <span className={compact ? 'text-base' : 'text-lg'} role="img" aria-hidden="true">
             {config.icon}
           </span>
-          <span className="text-sm font-medium text-stone-700">
+          <span className={`${compact ? 'text-xs' : 'text-sm'} font-medium text-stone-700`}>
             {contribution.label}
           </span>
         </div>
-        <div className="flex items-center gap-2 text-sm">
+        <div className={`flex items-center gap-2 ${compact ? 'text-xs' : 'text-sm'}`}>
           <span className="font-semibold text-stone-600">
             {contribution.amount.toLocaleString('en-US')}{' '}
-            <span className="text-xs font-normal text-stone-400">kg</span>
+            <span className={`${compact ? 'text-[10px]' : 'text-xs'} font-normal text-stone-400`}>kg</span>
           </span>
-          <span className="text-xs text-stone-400">
+          <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-stone-400`}>
             ({contribution.percentage}%)
           </span>
         </div>
@@ -73,7 +76,7 @@ function BarRow({
 
       {/* Bar */}
       <div
-        className="h-2.5 w-full overflow-hidden rounded-full"
+        className={`${compact ? 'h-1.5' : 'h-2.5'} w-full overflow-hidden rounded-full`}
         style={{ backgroundColor: config.trackColor }}
       >
         <motion.div
@@ -95,6 +98,7 @@ function BarRow({
 export default function EmissionBreakdown({
   contributions,
   className = '',
+  compact,
 }: EmissionBreakdownProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-60px' });
@@ -102,27 +106,33 @@ export default function EmissionBreakdown({
   // Sort by amount descending for visual priority
   const sorted = [...contributions].sort((a, b) => b.amount - a.amount);
 
+  const Container = compact ? motion.div : GlassCard;
+  const containerClasses = compact ? `p-0 w-full ${className}` : className;
+
   return (
-    <GlassCard
-      className={className}
+    <Container
+      className={containerClasses}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.15, ease: [0.33, 1, 0.68, 1] }}
     >
-      <h2 className="mb-5 text-lg font-semibold text-stone-700">
-        Emission Breakdown
-      </h2>
+      {!compact && (
+        <h2 className="mb-5 text-lg font-semibold text-stone-700">
+          Emission Breakdown
+        </h2>
+      )}
 
-      <div ref={ref} className="flex flex-col gap-5">
+      <div ref={ref} className={`flex flex-col ${compact ? 'gap-3' : 'gap-5'}`}>
         {sorted.map((contribution, i) => (
           <BarRow
             key={contribution.category}
             contribution={contribution}
             index={i}
             isInView={isInView}
+            compact={compact}
           />
         ))}
       </div>
-    </GlassCard>
+    </Container>
   );
 }

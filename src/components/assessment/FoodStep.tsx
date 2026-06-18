@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { FoodData, DietType, FoodWasteLevel } from '@/types';
 
 interface FoodStepProps {
@@ -63,7 +63,7 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           What best describes your diet?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="radiogroup" aria-label="What best describes your diet?">
           {DIETS.map(({ value, label, icon }) => {
             const selected = current.dietType === value;
             return (
@@ -77,7 +77,8 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-3xl">{icon}</span>
                 <span className="text-sm font-medium text-gray-700">
@@ -108,6 +109,7 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
           min={0}
           max={14}
           step={1}
+          aria-label="Meat meals per week"
           value={current.meatMealsPerWeek}
           onChange={(e) =>
             update({ meatMealsPerWeek: Number(e.target.value) })
@@ -125,7 +127,7 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           How much food do you waste?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="How much food do you waste?">
           {WASTE_LEVELS.map(({ value, label, description }) => {
             const selected = current.foodWaste === value;
             return (
@@ -139,7 +141,8 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-sm font-medium text-gray-700">
                   {label}

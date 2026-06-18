@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@/hooks/useAssessment';
 
 import ProgressBar from '@/components/ui/ProgressBar';
@@ -11,6 +11,7 @@ import TransportStep from '@/components/assessment/TransportStep';
 import EnergyStep from '@/components/assessment/EnergyStep';
 import FoodStep from '@/components/assessment/FoodStep';
 import LifestyleStep from '@/components/assessment/LifestyleStep';
+import AssessmentSkeleton from '@/components/assessment/AssessmentSkeleton';
 
 const pageVariants = {
   initial: { opacity: 0, x: 20 },
@@ -18,8 +19,10 @@ const pageVariants = {
   out: { opacity: 0, x: -20 },
 };
 
-export default function AssessmentPage() {
+function AssessmentContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const retake = searchParams.get('retake');
   const [mounted, setMounted] = useState(false);
   const {
     currentStep,
@@ -33,6 +36,7 @@ export default function AssessmentPage() {
     nextStep,
     prevStep,
     isStepValid,
+    resetAssessment,
   } = useAssessment();
 
   // Prevent hydration mismatch
@@ -43,14 +47,23 @@ export default function AssessmentPage() {
 
   // Redirect if complete
   useEffect(() => {
-    console.log('[AssessmentPage] Redirect check: isLoaded=', isLoaded, 'isComplete=', isComplete);
-    if (isLoaded && isComplete) {
-      console.log('[AssessmentPage] Redirecting to /dashboard!');
-      router.push('/dashboard');
+    if (retake === 'true') {
+      resetAssessment();
+      router.replace('/assessment');
+      return;
     }
-  }, [isLoaded, isComplete, router]);
+    console.log('[AssessmentPage] Redirect check: isLoaded=', isLoaded, 'isComplete=', isComplete);
+    if (isLoaded && isComplete && retake !== 'true') {
+      console.log('[AssessmentPage] Redirecting to /dashboard!');
+      if (document.startViewTransition) {
+        document.startViewTransition(() => router.push('/dashboard'));
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [isLoaded, isComplete, router, retake, resetAssessment]);
 
-  if (!mounted || !isLoaded || isComplete) return null;
+  if (!mounted || !isLoaded || isComplete) return <AssessmentSkeleton />;
 
   const handleNext = () => {
     console.log('[AssessmentPage] handleNext called. isStepValid=', isStepValid(currentStep));
@@ -162,5 +175,13 @@ export default function AssessmentPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AssessmentPage() {
+  return (
+    <Suspense fallback={<AssessmentSkeleton />}>
+      <AssessmentContent />
+    </Suspense>
   );
 }

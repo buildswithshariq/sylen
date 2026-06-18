@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useAssessment } from '@/hooks/useAssessment';
 import { useScore } from '@/hooks/useScore';
@@ -12,19 +12,24 @@ import { useCoach } from '@/hooks/useCoach';
 import ScoreCard from '@/components/dashboard/ScoreCard';
 import EcoLevelCard from '@/components/dashboard/EcoLevelCard';
 import EmissionBreakdown from '@/components/dashboard/EmissionBreakdown';
+import dynamic from 'next/dynamic';
+
 import RecommendationList from '@/components/dashboard/RecommendationList';
-import RoadmapCard from '@/components/dashboard/RoadmapCard';
-import WhatIfSimulator from '@/components/simulator/WhatIfSimulator';
-import CoachChat from '@/components/coach/CoachChat';
 import CommunityImpactWidget from '@/components/dashboard/CommunityImpactWidget';
 import CarbonSavingsTimeline from '@/components/dashboard/CarbonSavingsTimeline';
 import PriorityActions from '@/components/dashboard/PriorityActions';
 import GlassCard from '@/components/ui/GlassCard';
+import ShareButton from '@/components/dashboard/ShareButton';
+import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
 
 import ChampionHero from '@/components/dashboard/ChampionHero';
 import PositiveImpactSummary from '@/components/dashboard/PositiveImpactSummary';
 import MaintainImpactCard from '@/components/dashboard/MaintainImpactCard';
 import ChampionHabits from '@/components/dashboard/ChampionHabits';
+
+const CoachChat = dynamic(() => import('@/components/coach/CoachChat'), { ssr: false, loading: () => <div className="p-4 text-center text-sm text-stone-500 animate-pulse">Loading AI Coach...</div> });
+const WhatIfSimulator = dynamic(() => import('@/components/simulator/WhatIfSimulator'), { ssr: false, loading: () => <div className="p-4 text-center text-sm text-stone-500 animate-pulse">Loading Simulator...</div> });
+const RoadmapCard = dynamic(() => import('@/components/dashboard/RoadmapCard'), { ssr: false, loading: () => <div className="p-4 text-center text-sm text-stone-500 animate-pulse">Loading Roadmap...</div> });
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -43,7 +48,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [showRetakeModal, setShowRetakeModal] = useState(false);
-  const { assessmentData, isComplete, isLoaded, resetAssessment } = useAssessment();
+  const { assessmentData, isComplete, isLoaded } = useAssessment();
   const results = useScore(assessmentData);
   
   const whatIf = useWhatIf(assessmentData);
@@ -62,25 +67,33 @@ export default function DashboardPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (mounted && isLoaded && !isComplete) {
-      router.push('/assessment');
+      if (document.startViewTransition) {
+        document.startViewTransition(() => router.push('/assessment'));
+      } else {
+        router.push('/assessment');
+      }
     }
   }, [mounted, isComplete, isLoaded, router]);
 
   if (!mounted || !isLoaded || !isComplete || !results) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-off-white">
-        <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const { score, recommendations, ecoLevel, roadmap } = results;
 
   const handleRetake = () => {
-    if (assessmentData) resetAssessment();
+    localStorage.removeItem('sylen-assessment');
     localStorage.removeItem('eco-score-cache');
     setShowRetakeModal(false);
-    router.push('/assessment');
+    if (document.startViewTransition) {
+      document.startViewTransition(() => router.push('/assessment?retake=true'));
+    } else {
+      router.push('/assessment?retake=true');
+    }
+  };
+
+  const handleShared = () => {
+    coach.pushMessage("Your sustainability report is ready 🌱 Share it with friends and encourage them to measure their own impact.", "assistant");
   };
 
   // CHAMPION DASHBOARD MODE
@@ -94,15 +107,24 @@ export default function DashboardPage() {
               <h1 className="text-3xl sm:text-4xl font-bold text-stone-900 tracking-tight">Climate Champion Dashboard</h1>
               <p className="text-stone-500 mt-2 text-base sm:text-lg leading-relaxed">Thank you for leading the way towards a sustainable future.</p>
             </div>
-            <button
-              onClick={() => setShowRetakeModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 min-h-[56px] bg-white/60 hover:bg-white border border-stone-200 text-stone-700 rounded-xl shadow-sm transition-all text-sm font-medium whitespace-nowrap"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Retake Assessment
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <ShareButton 
+                score={score} 
+                ecoLevelName={ecoLevel.current.name} 
+                ecoLevelBadge={ecoLevel.current.badge}
+                assessmentData={assessmentData || undefined}
+                onShared={handleShared}
+              />
+              <button
+                onClick={() => setShowRetakeModal(true)}
+                className="inline-flex items-center gap-2 px-5 py-3 min-h-[56px] bg-white/60 hover:bg-white border border-stone-200 text-stone-700 rounded-xl shadow-sm transition-all text-sm font-medium whitespace-nowrap"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Retake Assessment
+              </button>
+            </div>
           </div>
 
           <motion.div 
@@ -152,6 +174,7 @@ export default function DashboardPage() {
                     error={coach.error}
                     onSendMessage={coach.sendMessage}
                     onInitialize={coach.initializeGreeting}
+                    context={coachContext}
                   />
                 </div>
               </GlassCard>
@@ -195,15 +218,24 @@ export default function DashboardPage() {
             <p className="text-stone-500 mt-2 text-base sm:text-lg leading-relaxed">Based on your assessment — your environmental impact and how to reduce it.</p>
           </div>
           
-          <button
-            onClick={() => setShowRetakeModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-3 min-h-[56px] bg-white/60 hover:bg-white border border-stone-200 text-stone-700 rounded-xl shadow-sm transition-all text-sm font-medium whitespace-nowrap"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Retake Assessment
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <ShareButton 
+              score={score} 
+              ecoLevelName={ecoLevel.current.name} 
+              ecoLevelBadge={ecoLevel.current.badge}
+              assessmentData={assessmentData || undefined}
+              onShared={handleShared}
+            />
+            <button
+              onClick={() => setShowRetakeModal(true)}
+              className="inline-flex items-center gap-2 px-5 py-3 min-h-[56px] bg-white/60 hover:bg-white border border-stone-200 text-stone-700 rounded-xl shadow-sm transition-all text-sm font-medium whitespace-nowrap"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Retake Assessment
+            </button>
+          </div>
         </div>
 
         <motion.div 
@@ -274,6 +306,7 @@ export default function DashboardPage() {
                   error={coach.error}
                   onSendMessage={coach.sendMessage}
                   onInitialize={coach.initializeGreeting}
+                  context={coachContext}
                 />
               </div>
             </GlassCard>

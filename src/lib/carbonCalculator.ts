@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Carbon Calculator
+// Sylen — Carbon Calculator
 // Calculates annual CO₂e emissions from assessment data.
 // Sources: EPA GHG Emission Factors Hub, UK DEFRA 2023
 // ============================================================

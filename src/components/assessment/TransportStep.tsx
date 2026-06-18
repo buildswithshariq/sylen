@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import type { TransportData, VehicleType, FuelType } from '@/types';
 
 interface TransportStepProps {
@@ -57,7 +57,7 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Primary mode of transport
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="radiogroup" aria-label="Primary mode of transport">
           {VEHICLES.map(({ value, label, icon }) => {
             const selected = current.vehicleType === value;
             return (
@@ -71,7 +71,8 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
                     ? 'border-emerald-500 bg-emerald-50/80'
                     : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
                 }`}
-                aria-pressed={selected}
+                role="radio"
+                aria-checked={selected}
               >
                 <span className="text-3xl">{icon}</span>
                 <span className="text-sm font-medium text-gray-700">
@@ -94,7 +95,7 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
           <legend className="mb-3 text-sm font-medium text-gray-700">
             Fuel type
           </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" role="radiogroup" aria-label="Fuel type">
             {FUELS.map(({ value, label }) => {
               const selected = current.fuelType === value;
               return (
@@ -108,7 +109,8 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
                       ? 'border-emerald-500 bg-emerald-50/80 text-emerald-700'
                       : 'border-transparent bg-white/40 text-gray-600 hover:bg-emerald-50/60'
                   }`}
-                  aria-pressed={selected}
+                  role="radio"
+                  aria-checked={selected}
                 >
                   {label}
                 </motion.button>
@@ -137,6 +139,7 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
           min={0}
           max={100}
           step={1}
+          aria-label="Daily commute distance"
           value={current.dailyDistanceKm}
           onChange={(e) =>
             update({ dailyDistanceKm: Number(e.target.value) })

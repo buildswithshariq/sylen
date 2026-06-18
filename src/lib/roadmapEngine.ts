@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Roadmap Engine
+// Sylen — Roadmap Engine
 // Generates a personalized 4-week action plan from recommendations.
 // ============================================================
 

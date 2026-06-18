@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 const STEP_LABELS = ['Transport', 'Energy', 'Food', 'Lifestyle'] as const;
 

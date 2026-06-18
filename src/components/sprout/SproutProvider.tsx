@@ -20,7 +20,7 @@ export default function SproutProvider() {
   // Re-read assessment state on every page navigation
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('ecopilot-assessment');
+      const stored = localStorage.getItem('sylen-assessment');
       if (stored) {
         const parsed = JSON.parse(stored) as AssessmentFormState;
         if (parsed.isComplete && parsed.data && parsed.data.transport && parsed.data.energy && parsed.data.food && parsed.data.lifestyle) {
@@ -40,15 +40,12 @@ export default function SproutProvider() {
             assessment: assessmentData
           });
         } else {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setContext(null);
         }
       } else {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setContext(null);
       }
     } catch {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setContext(null);
     }
   }, [pathname]);

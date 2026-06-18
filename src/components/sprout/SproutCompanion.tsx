@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { CoachContext } from '@/types';
 import CoachChat from '@/components/coach/CoachChat';
 import { useCoach } from '@/hooks/useCoach';
@@ -71,6 +71,7 @@ export default function SproutCompanion({ context }: SproutCompanionProps) {
               </div>
               <button 
                 onClick={() => setIsChatOpen(false)}
+                aria-label="Close chat"
                 className="text-white/80 hover:text-white transition-colors w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/20"
               >
                 ✕
@@ -85,6 +86,7 @@ export default function SproutCompanion({ context }: SproutCompanionProps) {
                 error={error}
                 onSendMessage={sendMessage}
                 onInitialize={initializeGreeting}
+                context={context}
               />
             </div>
           </motion.div>

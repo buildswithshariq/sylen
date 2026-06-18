@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Carbon Scoring Engine
+// Sylen — Carbon Scoring Engine
 // Maps CO₂e emissions to a 0–100 sustainability score.
 // ============================================================
 

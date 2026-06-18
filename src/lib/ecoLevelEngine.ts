@@ -1,5 +1,5 @@
 // ============================================================
-// EcoPilot AI — Eco Level / Gamification Engine
+// Sylen — Eco Level / Gamification Engine
 // ============================================================
 
 import { EcoLevel, UserEcoLevel } from '@/types';

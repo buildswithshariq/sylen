@@ -1,20 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import TransitionLink from '@/components/ui/TransitionLink';
+import { usePathname, useRouter } from 'next/navigation';
+import { m as motion, AnimatePresence } from 'framer-motion';
 import { useAssessment } from '@/hooks/useAssessment';
 
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Assessment', href: '/assessment' },
   { name: 'Resources', href: '/resources' },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { isComplete, isLoaded } = useAssessment();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -36,6 +36,34 @@ export default function Navbar() {
   const ctaText = isLoaded ? (isComplete ? 'Retake Assessment' : 'Take Assessment') : 'Take Assessment';
   const ctaHref = '/assessment';
 
+  const handleReAssessmentClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('sylen-assessment');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed.isComplete) {
+            e.preventDefault();
+            const confirmRetake = window.confirm(
+              "Are you sure you want to take a re-assessment? This will remove your previous record."
+            );
+            if (confirmRetake) {
+              localStorage.removeItem('sylen-assessment');
+              localStorage.removeItem('eco-score-cache');
+              if (document.startViewTransition) {
+                document.startViewTransition(() => router.push('/assessment?retake=true'));
+              } else {
+                router.push('/assessment?retake=true');
+              }
+            }
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+  };
+
   return (
     <>
       <nav
@@ -47,12 +75,12 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="flex items-center gap-2 group">
+              <TransitionLink href="/" className="flex items-center gap-2 group">
                 <span className="text-2xl transition-transform group-hover:scale-110">🌱</span>
                 <span className="font-semibold text-xl tracking-tight text-stone-800">
-                  Eco<span className="text-emerald-600">Pilot</span>
+                  Sy<span className="text-emerald-600">len</span>
                 </span>
-              </Link>
+              </TransitionLink>
             </div>
 
             {/* Desktop Navigation */}
@@ -60,7 +88,7 @@ export default function Navbar() {
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
-                  <Link
+                  <TransitionLink
                     key={link.name}
                     href={link.href}
                     className={`text-sm font-medium transition-colors ${
@@ -68,16 +96,17 @@ export default function Navbar() {
                     }`}
                   >
                     {link.name}
-                  </Link>
+                  </TransitionLink>
                 );
               })}
               
-              <Link
+              <TransitionLink
                 href={ctaHref}
+                onClick={handleReAssessmentClick}
                 className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               >
                 {ctaText}
-              </Link>
+              </TransitionLink>
             </div>
 
             {/* Mobile menu button */}
@@ -120,7 +149,7 @@ export default function Navbar() {
                 {navLinks.map((link) => {
                   const isActive = pathname === link.href;
                   return (
-                    <Link
+                    <TransitionLink
                       key={link.name}
                       href={link.href}
                       className={`block px-3 py-2 rounded-lg text-base font-medium ${
@@ -130,16 +159,17 @@ export default function Navbar() {
                       }`}
                     >
                       {link.name}
-                    </Link>
+                    </TransitionLink>
                   );
                 })}
                 <div className="pt-4 border-t border-stone-200/50">
-                  <Link
+                  <TransitionLink
                     href={ctaHref}
+                    onClick={handleReAssessmentClick}
                     className="flex items-center justify-center w-full px-4 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm"
                   >
                     {ctaText}
-                  </Link>
+                  </TransitionLink>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 
 interface ScoreRingProps {
