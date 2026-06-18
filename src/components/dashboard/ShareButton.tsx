@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { SustainabilityScore, AssessmentData } from '@/types';
 
 interface ShareButtonProps {
@@ -13,70 +13,53 @@ interface ShareButtonProps {
 
 export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assessmentData, onShared }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function generateToken() {
-      try {
-        setIsGenerating(true);
-        const sorted = [...score.contributions].sort((a, b) => a.amount - b.amount);
-        const topStrength = sorted[0]?.label || 'General Lifestyle';
-        const improvementArea = sorted[sorted.length - 1]?.label || 'Energy Usage';
-
-        const reportData = {
-          displayName: assessmentData?.lifestyle?.displayName || '',
-          score: score.score,
-          ecoLevel: ecoLevelName,
-          ecoBadge: ecoLevelBadge,
-          totalEmissions: score.totalEmissions,
-          contributions: score.contributions,
-          topStrength,
-          improvementArea
-        };
-
-        const res = await fetch('/api/share/sign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reportData)
-        });
-        
-        if (!res.ok) throw new Error('Failed to sign report');
-        
-        const { token } = await res.json();
-        if (isMounted) {
-          setShareUrl(`${window.location.origin}/shared-report?data=${token}`);
-        }
-      } catch (err) {
-        console.error('Error generating share link:', err);
-      } finally {
-        if (isMounted) setIsGenerating(false);
-      }
-    }
-    
-    generateToken();
-    return () => { isMounted = false; };
-  }, [score, ecoLevelName, ecoLevelBadge, assessmentData]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleShare = async () => {
-    if (!shareUrl) return;
-
-    const displayName = assessmentData?.lifestyle?.displayName;
-    const text = displayName
-      ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score.score}/100 and they are a ${ecoLevelName}.`
-      : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score.score}/100 and I'm a ${ecoLevelName}.`;
+    if (isGenerating) return;
+    setIsGenerating(true);
 
     try {
+      const sorted = [...score.contributions].sort((a, b) => a.amount - b.amount);
+      const topStrength = sorted[0]?.label || 'General Lifestyle';
+      const improvementArea = sorted[sorted.length - 1]?.label || 'Energy Usage';
+
+      const reportData = {
+        displayName: assessmentData?.lifestyle?.displayName || '',
+        score: score.score,
+        ecoLevel: ecoLevelName,
+        ecoBadge: ecoLevelBadge,
+        totalEmissions: score.totalEmissions,
+        contributions: score.contributions,
+        topStrength,
+        improvementArea
+      };
+
+      const res = await fetch('/api/share/sign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reportData)
+      });
+      
+      if (!res.ok) throw new Error('Failed to sign report');
+      
+      const { token } = await res.json();
+      const generatedUrl = `${window.location.origin}/shared-report?data=${token}`;
+
+      const displayName = assessmentData?.lifestyle?.displayName;
+      const text = displayName
+        ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score.score}/100 and they are a ${ecoLevelName}.`
+        : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score.score}/100 and I'm a ${ecoLevelName}.`;
+
       if (navigator.share) {
         await navigator.share({
           title: 'My Sylen Score',
           text,
-          url: shareUrl,
+          url: generatedUrl,
         });
         if (onShared) onShared();
       } else {
-        await navigator.clipboard.writeText(`${text} ${shareUrl}`);
+        await navigator.clipboard.writeText(`${text} ${generatedUrl}`);
         setCopied(true);
         if (onShared) onShared();
         setTimeout(() => setCopied(false), 2000);
@@ -84,15 +67,23 @@ export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assess
     } catch (err) {
       if ((err as Error).name !== 'AbortError') {
         console.error('Share failed:', err);
-        // Fallback to clipboard if share throws
+        // Fallback to clipboard if share throws (or fails due to async delay)
         try {
-          await navigator.clipboard.writeText(`${text} ${shareUrl}`);
+          // If we failed after generating the URL, try to copy it
+          const displayName = assessmentData?.lifestyle?.displayName;
+          const text = displayName
+            ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score.score}/100 and they are a ${ecoLevelName}.`
+            : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score.score}/100 and I'm a ${ecoLevelName}.`;
+            
+          await navigator.clipboard.writeText(`${text} (Visit sylen.com)`);
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         } catch (fallbackErr) {
           console.error('Clipboard fallback failed:', fallbackErr);
         }
       }
+    } finally {
+      setIsGenerating(false);
     }
   };
 

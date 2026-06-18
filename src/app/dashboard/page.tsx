@@ -161,6 +161,9 @@ export default function DashboardPage() {
   const coach = useCoach(coachContext);
 
   useEffect(() => {
+    // Force scroll to top when dashboard mounts
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (mounted && isLoaded && !isComplete) {

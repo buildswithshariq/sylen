@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   AssessmentData,
   AssessmentFormState,
@@ -42,7 +42,7 @@ function loadFromStorage(): AssessmentFormState | null {
   if (typeof window === 'undefined') return null;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    console.log('[useAssessment] loadFromStorage read:', stored);
+
     if (stored) return JSON.parse(stored);
   } catch {
     // Ignore parse errors
@@ -53,7 +53,7 @@ function loadFromStorage(): AssessmentFormState | null {
 function saveToStorage(state: AssessmentFormState) {
   if (typeof window === 'undefined') return;
   try {
-    console.log('[useAssessment] saveToStorage writing:', state);
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // Ignore storage errors
@@ -118,8 +118,6 @@ export function useAssessment() {
           lifestyle: { ...defaultLifestyle, ...stored.data.lifestyle },
         },
       });
-    } else {
-      console.log('[useAssessment] No stored data found during mount');
     }
     setIsLoaded(true);
   }, []);
@@ -127,10 +125,7 @@ export function useAssessment() {
   // Save to localStorage on every change, ONLY AFTER LOADED
   useEffect(() => {
     if (isLoaded) {
-      console.log('[useAssessment] isLoaded is true, triggering saveToStorage');
       saveToStorage(state);
-    } else {
-      console.log('[useAssessment] isLoaded is false, SKIPPING saveToStorage');
     }
   }, [state, isLoaded]);
 
@@ -163,10 +158,10 @@ export function useAssessment() {
   }, []);
 
   const nextStep = useCallback(() => {
-    console.log('[useAssessment] nextStep called');
+
     setState((prev) => {
       if (prev.currentStep >= 3) {
-        console.log('[useAssessment] Assessment complete!');
+
         return { ...prev, isComplete: true };
       }
       return {
@@ -207,15 +202,17 @@ export function useAssessment() {
     }
   }, []);
 
-  // Build full AssessmentData when complete
-  const assessmentData: AssessmentData | null = state.isComplete
-    ? {
-        transport: state.data.transport ?? defaultTransport,
-        energy: state.data.energy ?? defaultEnergy,
-        food: state.data.food ?? defaultFood,
-        lifestyle: state.data.lifestyle ?? defaultLifestyle,
-      }
-    : null;
+  // Build full AssessmentData when complete (Memoized to prevent render loops)
+  const assessmentData = useMemo<AssessmentData | null>(() => {
+    return state.isComplete
+      ? {
+          transport: state.data.transport ?? defaultTransport,
+          energy: state.data.energy ?? defaultEnergy,
+          food: state.data.food ?? defaultFood,
+          lifestyle: state.data.lifestyle ?? defaultLifestyle,
+        }
+      : null;
+  }, [state.isComplete, state.data]);
 
   return {
     currentStep: state.currentStep,

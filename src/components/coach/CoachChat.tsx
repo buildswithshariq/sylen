@@ -32,6 +32,7 @@ export default function CoachChat({
 }: CoachChatProps) {
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
 
   // Initialize greeting on mount
@@ -42,9 +43,11 @@ export default function CoachChat({
     }
   }, [onInitialize]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom (isolated to chat container)
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +65,10 @@ export default function CoachChat({
   return (
     <div className="flex flex-col h-full">
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+      <div 
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0"
+      >
         <AnimatePresence mode="popLayout">
           {messages.map((msg) => (
             <motion.div
