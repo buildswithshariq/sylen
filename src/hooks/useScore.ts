@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { AssessmentData, SustainabilityScore, Recommendation, UserEcoLevel, Roadmap } from '@/types';
 import { calculateCarbonFootprint } from '@/lib/carbonCalculator';
 import { generateSustainabilityScore } from '@/lib/carbonScoring';
@@ -18,9 +18,10 @@ interface ScoreResults {
 /**
  * Hook that computes the full score results from assessment data.
  * Runs the entire deterministic carbon intelligence pipeline.
+ * Caches key metrics in localStorage for the Sprout companion.
  */
 export function useScore(assessmentData: AssessmentData | null): ScoreResults | null {
-  return useMemo(() => {
+  const results = useMemo(() => {
     if (!assessmentData) return null;
 
     // Layer 1: Deterministic Carbon Intelligence
@@ -37,4 +38,29 @@ export function useScore(assessmentData: AssessmentData | null): ScoreResults | 
       roadmap,
     };
   }, [assessmentData]);
+
+  // Cache score data for Sprout companion context detection
+  useEffect(() => {
+    if (results) {
+      const totalReduction = results.recommendations.reduce(
+        (sum, r) => sum + r.estimatedReductionKg,
+        0
+      );
+      try {
+        localStorage.setItem(
+          'eco-score-cache',
+          JSON.stringify({
+            score: results.score.score,
+            ecoLevelName: results.ecoLevel.current.name,
+            totalReduction,
+          })
+        );
+      } catch {
+        // localStorage may be unavailable
+      }
+    }
+  }, [results]);
+
+  return results;
 }
+

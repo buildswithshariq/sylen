@@ -14,9 +14,9 @@ export function useCoach(context: CoachContext | null) {
   const [error, setError] = useState<string | null>(null);
   const hasGreeted = useRef(false);
 
-  // Generate initial greeting when context becomes available
+  // Generate initial greeting
   const initializeGreeting = useCallback(() => {
-    if (!context || hasGreeted.current) return;
+    if (hasGreeted.current) return;
     hasGreeted.current = true;
 
     const greeting = generateInitialGreeting(context);
@@ -32,7 +32,7 @@ export function useCoach(context: CoachContext | null) {
   // Send a message to the coach
   const sendMessage = useCallback(
     async (userMessage: string) => {
-      if (!context || !userMessage.trim() || isLoading) return;
+      if (!userMessage.trim() || isLoading) return;
 
       setError(null);
 
@@ -56,7 +56,7 @@ export function useCoach(context: CoachContext | null) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: userMessage.trim(),
-            context,
+            context, // can be null
             history: recentHistory,
           }),
         });

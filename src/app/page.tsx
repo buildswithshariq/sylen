@@ -2,8 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-
 
 
 const fadeUp = {
@@ -123,8 +121,6 @@ function HeroIllustration() {
 export default function Home() {
   return (
     <main className="min-h-screen bg-off-white">
-      <Navbar />
-
       {/* ============ Hero Section ============ */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         {/* Background */}
@@ -297,32 +293,35 @@ export default function Home() {
               How EcoPilot Works
             </h2>
             <p className="text-lg text-stone-500 max-w-2xl mx-auto">
-              Three simple steps to understanding and reducing your environmental impact.
+              Four simple steps to understanding and reducing your environmental impact.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 step: '01',
                 title: 'Take Assessment',
-                description:
-                  'Answer questions about your transport, energy use, diet, and lifestyle. Takes under 2 minutes.',
+                description: 'Answer simple questions about your transport, energy use, diet, and lifestyle.',
                 icon: '📋',
               },
               {
                 step: '02',
-                title: 'Get Your Score',
-                description:
-                  'Our carbon intelligence engine calculates your footprint using real EPA emission factors.',
-                icon: '📊',
+                title: 'Analyze Footprint',
+                description: 'Our engine calculates your exact carbon footprint using EPA emission factors.',
+                icon: '🔍',
               },
               {
                 step: '03',
-                title: 'Reduce & Track',
-                description:
-                  'Get personalized recommendations, simulate changes, and follow your AI-guided roadmap.',
-                icon: '🎯',
+                title: 'Receive Personalized Insights',
+                description: 'Get custom recommendations and a tailored 4-week roadmap to start your journey.',
+                icon: '💡',
+              },
+              {
+                step: '04',
+                title: 'Reduce Environmental Impact',
+                description: 'Track your progress, level up your Eco Status, and see your carbon savings grow.',
+                icon: '🌍',
               },
             ].map((item, i) => (
               <motion.div
@@ -331,17 +330,19 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.5 }}
-                className="relative"
+                className="relative h-full"
               >
-                <div className="glass-strong rounded-2xl p-8 h-full">
-                  <span className="text-6xl font-bold text-emerald-100 absolute top-4 right-6">
+                <div className="glass-strong rounded-2xl p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                  <span className="text-5xl font-bold text-emerald-100/50 absolute top-4 right-4">
                     {item.step}
                   </span>
                   <span className="text-4xl mb-4 block">{item.icon}</span>
-                  <h3 className="text-xl font-semibold text-stone-800 mb-2">
+                  <h3 className="text-lg font-semibold text-stone-800 mb-2">
                     {item.title}
                   </h3>
-                  <p className="text-stone-500 leading-relaxed">{item.description}</p>
+                  <p className="text-stone-500 leading-relaxed text-sm flex-grow">
+                    {item.description}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -377,7 +378,7 @@ export default function Home() {
               },
               {
                 title: 'AI Sustainability Coach',
-                description: 'Powered by Gemini 2.5 Flash. Explains your results, personalizes recommendations, and answers your sustainability questions.',
+                description: 'Explains your results, personalizes recommendations, and answers your sustainability questions.',
                 icon: '🤖',
                 span: '',
               },
@@ -457,20 +458,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ============ Footer ============ */}
-      <footer className="py-12 border-t border-stone-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🌿</span>
-              <span className="font-semibold text-stone-700">EcoPilot</span>
-            </div>
-            <p className="text-sm text-stone-400">
-              Built with 💚 for a sustainable future.
-            </p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

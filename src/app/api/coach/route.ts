@@ -41,7 +41,7 @@ async function callOpenRouterFallback(apiKey: string, systemPrompt: string, mess
       model,
       messages: formattedMessages,
       temperature: 0.7,
-      max_tokens: 512,
+      max_tokens: 2048,
     })
   });
 
@@ -82,9 +82,9 @@ export async function POST(request: NextRequest) {
     };
 
     // Validate input
-    if (!message || !context) {
+    if (!message) {
       return NextResponse.json(
-        { error: 'Missing required fields: message and context' },
+        { error: 'Missing required field: message' },
         { status: 400 }
       );
     }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
           })),
           config: {
             systemInstruction: systemPrompt,
-            maxOutputTokens: 512,
+            maxOutputTokens: 2048,
             temperature: 0.7,
             topP: 0.9,
           },

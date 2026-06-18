@@ -1,93 +1,151 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAssessment } from '@/hooks/useAssessment';
+
+const navLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Assessment', href: '/assessment' },
+  { name: 'Resources', href: '/resources' },
+];
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { isComplete, isLoaded } = useAssessment();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isHome = pathname === '/';
+  // Close mobile menu when path changes
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const ctaText = isLoaded ? (isComplete ? 'Retake Assessment' : 'Take Assessment') : 'Take Assessment';
+  const ctaHref = '/assessment';
 
   return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'glass-strong shadow-sm'
-          : isHome
-          ? 'bg-transparent'
-          : 'glass-subtle'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-xl">🌿</span>
-            <span className="font-semibold text-stone-800 group-hover:text-emerald-700 transition-colors">
-              EcoPilot
-            </span>
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700">
-              Carbon Intelligence
-            </span>
-          </Link>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? 'bg-white/80 backdrop-blur-xl border-b border-stone-200/50 shadow-sm' : 'bg-transparent'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center">
+              <Link href="/" className="flex items-center gap-2 group">
+                <span className="text-2xl transition-transform group-hover:scale-110">🌱</span>
+                <span className="font-semibold text-xl tracking-tight text-stone-800">
+                  Eco<span className="text-emerald-600">Pilot</span>
+                </span>
+              </Link>
+            </div>
 
-          {/* Navigation */}
-          <div className="flex items-center gap-1">
-            {!isHome && (
-              <>
-                <Link
-                  href="/"
-                  className="px-3 py-1.5 text-sm text-stone-600 hover:text-stone-800 
-                    rounded-lg hover:bg-white/40 transition-all"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/assessment"
-                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
-                    pathname === '/assessment'
-                      ? 'text-emerald-700 bg-emerald-50/60'
-                      : 'text-stone-600 hover:text-stone-800 hover:bg-white/40'
-                  }`}
-                >
-                  Assessment
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className={`px-3 py-1.5 text-sm rounded-lg transition-all ${
-                    pathname === '/dashboard'
-                      ? 'text-emerald-700 bg-emerald-50/60'
-                      : 'text-stone-600 hover:text-stone-800 hover:bg-white/40'
-                  }`}
-                >
-                  Dashboard
-                </Link>
-              </>
-            )}
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex md:items-center md:space-x-8">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`text-sm font-medium transition-colors ${
+                      isActive ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+              
+              <Link
+                href={ctaHref}
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+              >
+                {ctaText}
+              </Link>
+            </div>
 
-            <Link
-              href="/assessment"
-              className="ml-2 px-4 py-2 text-sm font-medium text-white bg-emerald-600 
-                rounded-xl hover:bg-emerald-700 transition-colors shadow-sm 
-                hover:shadow-md active:scale-[0.98]"
-            >
-              {isHome ? 'Start Assessment' : 'Retake'}
-            </Link>
+            {/* Mobile menu button */}
+            <div className="flex items-center md:hidden">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center p-2 rounded-md text-stone-600 hover:text-stone-900 hover:bg-stone-100/50 focus:outline-none"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <span className="sr-only">Open main menu</span>
+                {!isMobileMenuOpen ? (
+                  <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                ) : (
+                  <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </motion.nav>
+      </nav>
+
+      {/* Mobile Menu Panel */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-0 z-40 bg-stone-900/20 backdrop-blur-sm"
+          >
+            <div className="absolute top-16 left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-stone-200/50 shadow-xl pb-6 px-4 pt-4 rounded-b-3xl">
+              <div className="flex flex-col space-y-4">
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`block px-3 py-2 rounded-lg text-base font-medium ${
+                        isActive
+                          ? 'bg-emerald-50 text-emerald-600'
+                          : 'text-stone-700 hover:bg-stone-50 hover:text-emerald-600'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+                <div className="pt-4 border-t border-stone-200/50">
+                  <Link
+                    href={ctaHref}
+                    className="flex items-center justify-center w-full px-4 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm"
+                  >
+                    {ctaText}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

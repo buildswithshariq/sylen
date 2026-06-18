@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import SproutProvider from "@/components/sprout/SproutProvider";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,7 +23,7 @@ export const metadata: Metadata = {
     "carbon calculator",
     "AI coach",
   ],
-  authors: [{ name: "EcoPilot AI" }],
+  authors: [{ name: "EcoPilot" }],
   icons: {
     icon: [
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
@@ -41,8 +44,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col font-sans bg-off-white text-stone-900 antialiased">
-        {children}
+        <Navbar />
+        <main className="flex-grow flex flex-col">
+          {children}
+        </main>
+        <Footer />
+        <SproutProvider />
       </body>
     </html>
   );
 }
+

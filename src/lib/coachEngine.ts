@@ -8,9 +8,32 @@ import { CoachContext, CoachMessage } from '@/types';
 
 /**
  * Build the system prompt for the AI coach.
- * Injects the user's actual data so AI can reference real numbers.
+ * Injects the user's actual data if available.
  */
-export function buildSystemPrompt(context: CoachContext): string {
+export function buildSystemPrompt(context: CoachContext | null): string {
+  if (!context) {
+    return `You are Sprout 🌱, a friendly and knowledgeable sustainability companion for EcoPilot.
+
+## YOUR CAPABILITIES
+1. Explain what carbon footprint means
+2. Explain climate change concepts
+3. Explain sustainability habits
+4. Explain how EcoPilot works
+5. Explain why tracking emissions matters
+6. Answer general environmental questions
+7. Guide users around the platform
+
+## RULES — FOLLOW STRICTLY
+1. Be encouraging, helpful, and actionable.
+2. Keep responses concise (2-4 paragraphs max).
+3. Always function as a real conversational assistant.
+4. You can naturally suggest taking the assessment for personalized insights, but DO NOT repeatedly pressure users or force the assessment flow.
+5. Example natural suggestion: "I can help you without an assessment, but if you'd like personalized insights, you can take the assessment anytime."
+6. If asked something outside sustainability/environment, politely redirect.
+7. Format responses with short paragraphs for readability.
+8. Always identify yourself as "Sprout" — never as a generic AI.`;
+  }
+
   const { score, recommendations, ecoLevel, assessment } = context;
 
   const topSource = score.contributions[0];
@@ -23,7 +46,36 @@ export function buildSystemPrompt(context: CoachContext): string {
     .map((c) => `- ${c.label}: ${score.breakdown[c.category as keyof typeof score.breakdown].toLocaleString()} kg CO₂e/yr (${c.percentage}%)`)
     .join('\n');
 
-  return `You are EcoPilot AI, a friendly and knowledgeable sustainability coach. You help people understand and reduce their carbon footprint through practical, encouraging advice.
+  const isChampion = score.score >= 90;
+
+  let responsibilities = `
+## YOUR RESPONSIBILITIES
+1. Explain the sustainability score calculation methodology.
+2. Explain the carbon emission breakdown by category (transport, energy, food, lifestyle).
+3. Explain each recommendation and why it was generated.
+4. Explain the Eco Level gamification system and how to level up.
+5. Explain the 4-week roadmap and its weekly actions.
+6. Explain how the What-If Simulator works and what scenarios are available.
+7. Explain all dashboard metrics and what they mean.
+8. Suggest specific improvements based on the user's data.
+9. Guide users around the EcoPilot platform.
+10. Explain the EcoPilot project mission — making sustainability accessible.
+`;
+
+  if (isChampion) {
+    responsibilities = `
+## YOUR RESPONSIBILITIES
+1. Congratulate the user on being a Climate Champion.
+2. Explain their positive impact (emissions prevented, equivalents).
+3. Encourage them to maintain their sustainable habits.
+4. Suggest ways they can inspire their community and lead by example.
+5. Explain the carbon emission breakdown.
+6. Avoid pushing them to 'do more' or 'improve' drastically, instead focus on celebration and maintenance.
+7. Explain the EcoPilot project mission.
+`;
+  }
+
+  return `You are Sprout Coach AI 🌱, a friendly and knowledgeable sustainability coach for EcoPilot. You help people understand and reduce their carbon footprint through practical, encouraging advice.
 
 ## USER'S CARBON FOOTPRINT DATA (use these exact numbers)
 
@@ -31,6 +83,7 @@ export function buildSystemPrompt(context: CoachContext): string {
 **Total Annual Emissions:** ${score.totalEmissions.toLocaleString()} kg CO₂e/year
 **Comparison to US Average:** ${score.comparisonToAverage > 0 ? `${score.comparisonToAverage}% above` : `${Math.abs(score.comparisonToAverage)}% below`} average (16,000 kg CO₂e/yr)
 **Eco Level:** ${ecoLevel.current.badge} ${ecoLevel.current.name}${ecoLevel.next ? ` (${ecoLevel.pointsToNext} points to ${ecoLevel.next.name})` : ''}
+${isChampion ? '**Status:** CLIMATE CHAMPION 🏆' : ''}
 
 **Emission Breakdown:**
 ${breakdownStr}
@@ -42,8 +95,8 @@ ${breakdownStr}
 **Food:** ${assessment.food.dietType.replace('_', ' ')} diet, ${assessment.food.meatMealsPerWeek} meat meals/week
 **Lifestyle:** ${assessment.lifestyle.flightsPerYear} flights/year, shops ${assessment.lifestyle.shoppingFrequency}, recycles ${assessment.lifestyle.recyclingHabit}
 
-**Top Recommended Actions:**
-${topRecs}
+${!isChampion ? `**Top Recommended Actions:**\n${topRecs}\n` : ''}
+${responsibilities}
 
 ## RULES — FOLLOW STRICTLY
 1. NEVER calculate or estimate emissions yourself. Always reference the data above.
@@ -51,11 +104,12 @@ ${topRecs}
 3. Be encouraging, specific, and actionable.
 4. Keep responses concise (2-4 paragraphs max).
 5. Use the user's actual data to personalize every response.
-6. Suggest specific actions from the recommendations list when relevant.
+${!isChampion ? '6. Suggest specific actions from the recommendations list when relevant.' : '6. Focus on celebrating their existing good habits.'}
 7. Use emojis sparingly for warmth.
-8. When asked about improvements, reference the estimated savings from recommendations.
+${!isChampion ? '8. When asked about improvements, reference the estimated savings from recommendations.' : ''}
 9. If asked something outside sustainability/environment, politely redirect.
-10. Format responses with short paragraphs for readability.`;
+10. Format responses with short paragraphs for readability.
+11. Always identify yourself as "Sprout Coach AI" — never as a generic AI.`;
 }
 
 /**
@@ -63,7 +117,7 @@ ${topRecs}
  * Keeps only the last 5 messages for context window efficiency.
  */
 export function buildChatMessages(
-  context: CoachContext,
+  context: CoachContext | null,
   conversationHistory: CoachMessage[],
   newUserMessage: string
 ): { systemPrompt: string; messages: { role: string; content: string }[] } {
@@ -86,35 +140,34 @@ export function buildChatMessages(
 }
 
 /**
- * Generate a contextual initial greeting based on the user's score.
+ * Generate a contextual initial greeting based on the user's score or lack thereof.
  */
-export function generateInitialGreeting(context: CoachContext): string {
-  const { score, ecoLevel } = context;
-  const topSource = score.contributions[0];
-
-  if (score.score >= 80) {
-    return `${ecoLevel.current.badge} Amazing! Your sustainability score is **${score.score}/100** — you're an **${score.categoryLabel}** performer! Your total footprint is ${score.totalEmissions.toLocaleString()} kg CO₂e/year, which is ${Math.abs(score.comparisonToAverage)}% below the US average. That's genuinely impressive.\n\nYour biggest area is **${topSource.label}** at ${topSource.percentage}% of your footprint. I can help you optimize even further. What would you like to know?`;
+export function generateInitialGreeting(context: CoachContext | null): string {
+  if (!context) {
+    return `Hi! I'm Sprout 🌱\n\nI'm here to help you understand sustainability, carbon footprints, and how EcoPilot works.\n\nYou can ask me questions anytime.\n\n*Tip: Take the assessment to watch my island grow and evolve as you build sustainable habits!*`;
   }
 
-  if (score.score >= 60) {
-    return `${ecoLevel.current.badge} Nice work! Your sustainability score is **${score.score}/100** — that puts you in the **${score.categoryLabel}** category. Your annual footprint is ${score.totalEmissions.toLocaleString()} kg CO₂e.\n\n**${topSource.label}** is your biggest impact area at ${topSource.percentage}%. I have some practical suggestions that could boost your score. Ask me anything about your results or how to improve!`;
+  const { score } = context;
+
+  if (score.score >= 90) {
+    return `🏆 Congratulations 🎉\n\nYou are a **Climate Champion** operating at an exceptional sustainability level!\n\nYour island is fully grown! 🌳 I've reviewed your sustainability profile and can help explain your score, recommendations, emissions, and improvement opportunities. My role is to help you maintain your impact and inspire others. How can I assist you today?`;
   }
 
-  if (score.score >= 40) {
-    return `${ecoLevel.current.badge} Thanks for taking the assessment! Your score is **${score.score}/100** (${score.categoryLabel}). Your annual footprint is ${score.totalEmissions.toLocaleString()} kg CO₂e — ${score.comparisonToAverage > 0 ? `${score.comparisonToAverage}% above` : 'around'} the US average.\n\nThe good news? **${topSource.label}** (${topSource.percentage}% of your footprint) has great potential for improvement. I'll help you find easy wins that make a real difference. What would you like to explore first?`;
-  }
-
-  return `${ecoLevel.current.badge} I appreciate you taking this step! Your score is **${score.score}/100**, and your annual footprint is ${score.totalEmissions.toLocaleString()} kg CO₂e. That's above average, but here's what matters: **you're here, and you want to improve.**\n\n**${topSource.label}** accounts for ${topSource.percentage}% of your emissions — and that's where we can make the biggest impact. I have specific, practical actions that can dramatically reduce your footprint. Ready to get started?`;
+  return `Welcome back! I'm Sprout Coach AI 🌱\n\nI've reviewed your sustainability profile and can help explain your score, recommendations, emissions, and improvement opportunities.\n\n*Tip: As you improve your score and level up, my island will grow and evolve!* 🪴`;
 }
 
 /**
  * Fallback responses when Gemini API is unavailable.
- * These are still personalized using context data.
+ * These are still personalized using context data if available.
  */
 export function getFallbackResponse(
   userMessage: string,
-  context: CoachContext
+  context: CoachContext | null
 ): string {
+  if (!context) {
+    return `Hi there! I'm Sprout 🌱. I can help answer questions about sustainability, carbon footprints, and EcoPilot. Try taking the assessment for more personalized insights!`;
+  }
+
   const msg = userMessage.toLowerCase();
   const topSource = context.score.contributions[0];
   const topRec = context.recommendations[0];

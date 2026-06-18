@@ -78,7 +78,7 @@ export default function CoachChat({
                 {msg.role === 'assistant' && (
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <span className="text-sm">🌿</span>
-                    <span className="text-xs font-medium text-emerald-700">EcoPilot AI</span>
+                    <span className="text-xs font-medium text-emerald-700">Sprout Coach AI 🌱</span>
                   </div>
                 )}
                 <div className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -105,7 +105,7 @@ export default function CoachChat({
             <div className="bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl rounded-bl-sm px-4 py-3">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <span className="text-sm">🌿</span>
-                <span className="text-xs font-medium text-emerald-700">EcoPilot AI</span>
+                <span className="text-xs font-medium text-emerald-700">Sprout Coach AI 🌱</span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
