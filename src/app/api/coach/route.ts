@@ -10,7 +10,7 @@ import { GoogleGenAI } from '@google/genai';
 import { CoachContext, CoachMessage } from '@/types';
 import { buildChatMessages, getFallbackResponse } from '@/lib/coachEngine';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 async function streamOpenRouter(
   apiKey: string,
