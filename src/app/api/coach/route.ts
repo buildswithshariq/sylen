@@ -23,9 +23,10 @@ async function streamOpenRouter(
     'poolside/laguna-xs.2:free',
     'poolside/laguna-m.1:free',
   ];
-  const model = models[Math.floor(Math.random() * models.length)]; /* Math.random() is used only for non-security-critical
-                                                                     AI model selection and does not generate
-                                                                      credentials, tokens, secrets, or identifiers. */
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  const randomFraction = array[0] / (0xffffffff + 1);
+  const model = models[Math.floor(randomFraction * models.length)];
 
   const formattedMessages = [
     { role: 'system', content: systemPrompt },
