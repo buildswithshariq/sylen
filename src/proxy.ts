@@ -6,11 +6,12 @@ export function proxy(request: NextRequest) {
   // 'unsafe-eval' is needed for Next.js development HMR
   const isDev = process.env.NODE_ENV === 'development';
   
-  // We use strict-dynamic for modern browsers, which safely ignores unsafe-inline.
-  // We keep unsafe-inline as a fallback for older browsers.
+  // In Next.js App Router, statically generated pages (SSG) do not receive the middleware nonce at build time.
+  // Using 'strict-dynamic' forces the browser to reject all scripts without a nonce, breaking production.
+  // We fall back to 'self' and 'unsafe-inline' for production to allow Next.js bundles and hydration.
   const scriptSrc = isDev 
     ? `'self' 'unsafe-eval' 'unsafe-inline'` 
-    : `'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https: http:`;
+    : `'self' 'unsafe-inline'`;
     
   const cspHeader = `
     default-src 'self';
