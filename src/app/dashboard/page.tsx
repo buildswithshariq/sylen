@@ -175,7 +175,7 @@ export default function DashboardPage() {
     }
   }, [mounted, isComplete, isLoaded, router]);
 
-  if (!mounted || !isLoaded || !isComplete || !results) {
+  if (!mounted || !isLoaded || !isComplete || !results || !assessmentData) {
     return <DashboardSkeleton />;
   }
 
@@ -229,7 +229,7 @@ export default function DashboardPage() {
 
             {/* Row 2: Maintain Impact + Emissions Breakdown */}
             <motion.div variants={itemAnim} className="md:col-span-5 h-full">
-              <MaintainImpactCard assessmentData={assessmentData!} />
+              <MaintainImpactCard assessmentData={assessmentData} />
             </motion.div>
 
             <motion.div variants={itemAnim} className="md:col-span-7 h-full">

@@ -38,7 +38,7 @@ describe('carbonCalculator', () => {
   describe('calculateEnergyEmissions', () => {
     it('calculates base energy and AC correctly without appliance multiplier', () => {
       const data = { monthlyElectricityKwh: 100, acHoursPerDay: 0, applianceUsage: 'medium' as const };
-      const expected = 100 * 12 * GRID_EMISSION_FACTOR; // medium multiplier is 1.0
+      const expected = 100 * 12 * GRID_EMISSION_FACTOR; // medium multiplier is 1
       expect(calculateEnergyEmissions(data)).toBeCloseTo(expected, 2);
     });
 
@@ -48,10 +48,10 @@ describe('carbonCalculator', () => {
       expect(calculateEnergyEmissions(data)).toBeCloseTo(expected, 2);
     });
 
-    it('uses 1.0 multiplier fallback for unknown appliance usage', () => {
+    it('uses 1 multiplier fallback for unknown appliance usage', () => {
       // @ts-expect-error - testing fallback
       const data = { monthlyElectricityKwh: 100, acHoursPerDay: 0, applianceUsage: 'unknown' };
-      const expected = 100 * 12 * GRID_EMISSION_FACTOR * 1.0;
+      const expected = 100 * 12 * GRID_EMISSION_FACTOR * 1;
       expect(calculateEnergyEmissions(data)).toBeCloseTo(expected, 2);
     });
   });
@@ -59,14 +59,14 @@ describe('carbonCalculator', () => {
   describe('calculateFoodEmissions', () => {
     it('calculates vegan diet emissions without meat', () => {
       const data = { dietType: 'vegan' as const, meatMealsPerWeek: 0, foodWaste: 'minimal' as const };
-      const expected = DIET_BASE_EMISSIONS.vegan * 1.0; // minimal waste is 1.0
+      const expected = DIET_BASE_EMISSIONS.vegan * 1; // minimal waste is 1
       expect(calculateFoodEmissions(data)).toBeCloseTo(expected, 2);
     });
 
     it('uses fallback for unknown diet type and food waste', () => {
       // @ts-expect-error - testing fallback
       const data = { dietType: 'unknown', meatMealsPerWeek: 0, foodWaste: 'unknown' };
-      const expected = DIET_BASE_EMISSIONS.mixed * 1.0;
+      const expected = DIET_BASE_EMISSIONS.mixed * 1;
       expect(calculateFoodEmissions(data)).toBeCloseTo(expected, 2);
     });
   });

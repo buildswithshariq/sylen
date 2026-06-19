@@ -213,17 +213,9 @@ describe('recommendationEngine', () => {
       expectRec(recs, 'buy less');
     });
 
-    it('recyclingHabit === "never"', () => {
+    it.each(['never', 'sometimes'] as const)('recyclingHabit === "%s"', (habit) => {
       const data = createBaseAssessment();
-      data.lifestyle = { flightsPerYear: 0, shoppingFrequency: 'rarely', recyclingHabit: 'never' };
-      const recs = generateRecommendations(data);
-
-      expectRec(recs, 'Start recycling');
-    });
-
-    it('recyclingHabit === "sometimes"', () => {
-      const data = createBaseAssessment();
-      data.lifestyle = { flightsPerYear: 0, shoppingFrequency: 'rarely', recyclingHabit: 'sometimes' };
+      data.lifestyle = { flightsPerYear: 0, shoppingFrequency: 'rarely', recyclingHabit: habit };
       const recs = generateRecommendations(data);
 
       expectRec(recs, 'Start recycling');
