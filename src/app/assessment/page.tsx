@@ -52,9 +52,7 @@ function AssessmentContent() {
       router.replace('/assessment');
       return;
     }
-    console.log('[AssessmentPage] Redirect check: isLoaded=', isLoaded, 'isComplete=', isComplete);
     if (isLoaded && isComplete && retake !== 'true') {
-      console.log('[AssessmentPage] Redirecting to /dashboard!');
       if (document.startViewTransition) {
         document.startViewTransition(() => router.push('/dashboard'));
       } else {
@@ -66,7 +64,6 @@ function AssessmentContent() {
   if (!mounted || !isLoaded || isComplete) return <AssessmentSkeleton />;
 
   const handleNext = () => {
-    console.log('[AssessmentPage] handleNext called. isStepValid=', isStepValid(currentStep));
     if (isStepValid(currentStep)) {
       nextStep();
     }
