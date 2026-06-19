@@ -58,6 +58,26 @@ describe('coachEngine', () => {
       expect(prompt).toContain('Congratulate the user');
       expect(prompt).not.toContain('Top Recommended Actions:');
     });
+
+    it('handles comparisonToAverage > 0', () => {
+      const highEmissionsContext = { ...mockContext, score: { ...mockContext.score, comparisonToAverage: 25 } };
+      const prompt = buildSystemPrompt(highEmissionsContext);
+      expect(prompt).toContain('25% above');
+    });
+
+    it('handles ecoLevel.next being null', () => {
+      const maxLevelContext = { ...mockContext, ecoLevel: { current: mockContext.ecoLevel.current, pointsToNext: 0, next: null } };
+      const prompt = buildSystemPrompt(maxLevelContext);
+      // It shouldn't contain the "points to" text if next is null
+      expect(prompt).not.toContain('points to');
+    });
+
+    it('handles non-car vehicle types in prompt', () => {
+      const transitContext = { ...mockContext, assessment: { ...mockContext.assessment, transport: { ...mockContext.assessment.transport, vehicleType: 'public_transit' } } };
+      // @ts-expect-error - overriding union type string
+      const prompt = buildSystemPrompt(transitContext);
+      expect(prompt).toContain('Uses public transit');
+    });
   });
 
   describe('buildChatMessages', () => {
@@ -68,6 +88,14 @@ describe('coachEngine', () => {
       expect(result.messages.length).toBe(6); // 5 history + 1 new
       expect(result.messages[0].content).toBe('Msg 5');
       expect(result.messages[5].content).toBe('New Message');
+    });
+
+    it('maps non-user roles to model', () => {
+      // @ts-expect-error - testing role mapping
+      const history = [{ id: '1', role: 'assistant', content: 'Hello' }];
+      const result = buildChatMessages(mockContext, history, 'Hi');
+      
+      expect(result.messages[0].role).toBe('model');
     });
   });
 
@@ -86,89 +114,146 @@ describe('coachEngine', () => {
     });
   });
 
-  describe('getFallbackResponse', () => {
-
-    it('handles transport queries', () => {
-      const response = getFallbackResponse('transport', mockContext);
-      expect(response).toContain('Transportation accounts for');
-      });
-
-    it('handles energy queries', () => {
-      const response = getFallbackResponse('energy', mockContext);
-     expect(response).toContain('Your home energy use contributes');
-     });
-
-    it('handles food queries', () => {
-      const response = getFallbackResponse('food', mockContext);
-      expect(response).toContain('Your food choices account for');
-     });
-
-    it('handles unknown queries with default response', () => {
-      const response = getFallbackResponse('tell me something random', mockContext);
-      expect(response).toContain('Your sustainability score is **85/100**');
-     });
-
-     it('handles low-emission transport method', () => {
-      const context = {
-         ...mockContext,
-          assessment: {
-         ...mockContext.assessment,
-      transport: {
-        ...mockContext.assessment.transport,
-        vehicleType: 'walk',
-      },
-    },
+    describe('getFallbackResponse', () => {
+  const expectResponseToContain = (
+    message: string,
+    context: CoachContext | null,
+    expected: string
+  ) => {
+    const response = getFallbackResponse(message, context);
+    expect(response).toContain(expected);
   };
 
-  const response = getFallbackResponse('transport', context);
-  expect(response).toContain('low-emission transport method');
-});
-
-    it('handles vegan diet', () => {
-  const context = {
-    ...mockContext,
-    assessment: {
-      ...mockContext.assessment,
-      food: {
-        ...mockContext.assessment.food,
-        dietType: 'vegan',
-      },
-    },
-  };
-
-  const response = getFallbackResponse('food', context);
-  expect(response).toContain('plant-based diet');
-});
-
-it('handles heavy meat diet', () => {
-  const context = {
-    ...mockContext,
-    assessment: {
-      ...mockContext.assessment,
-      food: {
-        ...mockContext.assessment.food,
-        dietType: 'heavy_meat',
-      },
-    },
-  };
-
-  const response = getFallbackResponse('food', context);
-  expect(response).toContain('meat-free day');
-});
-
-    it('handles generic queries', () => {
-      const response = getFallbackResponse('hello', null);
-      expect(response).toContain('Hi there! I\'m Sprout');
-    });
-
-    it('handles score queries', () => {
-      const response = getFallbackResponse('what is my score', mockContext);
-      expect(response).toContain('Your sustainability score is **85/100**');
-    });
-
-    it('handles improve queries', () => {
-      const response = getFallbackResponse('how to improve', mockContext);
-      expect(response).toContain('Your top recommendation is: **Recycle**');
-    });
+  it('handles transport queries', () => {
+    expectResponseToContain(
+      'transport',
+      mockContext,
+      'Transportation accounts for'
+    );
   });
+
+  it('handles energy queries', () => {
+    expectResponseToContain(
+      'energy',
+      mockContext,
+      'Your home energy use contributes'
+    );
+  });
+
+  it('handles energy queries when AC usage is low', () => {
+    const context = {
+      ...mockContext,
+      assessment: {
+        ...mockContext.assessment,
+        energy: {
+          ...mockContext.assessment.energy,
+          acHoursPerDay: 2,
+        },
+      },
+    };
+
+    expectResponseToContain(
+      'energy',
+      context,
+      'Your energy usage is moderate'
+    );
+  });
+
+  it('handles food queries', () => {
+    expectResponseToContain(
+      'food',
+      mockContext,
+      'Your food choices account for'
+    );
+  });
+
+  it('handles unknown queries with default response', () => {
+    expectResponseToContain(
+      'tell me something random',
+      mockContext,
+      'Your sustainability score is **85/100**'
+    );
+  });
+
+  it('handles low-emission transport method', () => {
+    const context = {
+      ...mockContext,
+      assessment: {
+        ...mockContext.assessment,
+        transport: {
+          ...mockContext.assessment.transport,
+          vehicleType: 'walk',
+        },
+      },
+    };
+
+    expectResponseToContain(
+      'transport',
+      context,
+      'low-emission transport method'
+    );
+  });
+
+  it('handles vegan diet', () => {
+    const context = {
+      ...mockContext,
+      assessment: {
+        ...mockContext.assessment,
+        food: {
+          ...mockContext.assessment.food,
+          dietType: 'vegan',
+        },
+      },
+    };
+
+    expectResponseToContain(
+      'food',
+      context,
+      'plant-based diet'
+    );
+  });
+
+  it('handles heavy meat diet', () => {
+    const context = {
+      ...mockContext,
+      assessment: {
+        ...mockContext.assessment,
+        food: {
+          ...mockContext.assessment.food,
+          dietType: 'heavy_meat',
+        },
+      },
+    };
+
+    expectResponseToContain(
+      'food',
+      context,
+      'meat-free day'
+    );
+  });
+
+  it('handles generic queries', () => {
+    expectResponseToContain(
+      'hello',
+      null,
+      "Hi there! I'm Sprout"
+    );
+  });
+
+  it('handles score queries', () => {
+    expectResponseToContain(
+      'what is my score',
+      mockContext,
+      'Your sustainability score is **85/100**'
+    );
+  });
+
+  it('handles improve queries', () => {
+    expectResponseToContain(
+      'how to improve',
+      mockContext,
+      'Your top recommendation is: **Recycle**'
+     );
+   });
+ });
 });
