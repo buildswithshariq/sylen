@@ -36,8 +36,6 @@ async function streamOpenRouter(
     })),
   ];
 
-  console.log(`[Tier 2] Selected OpenRouter Model: ${model}`);
-
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -168,18 +166,12 @@ export async function POST(request: NextRequest) {
     const geminiKey = process.env.GOOGLE_GEMINI_API_KEY;
     const openRouterKey = process.env.OPENROUTER_API_KEY;
 
-    console.log('\n=========================================');
-    console.log('         AI COACH REQUEST STARTED        ');
-    console.log('=========================================');
-
     const stream = new ReadableStream({
       async start(controller) {
         // Tier 1: Primary Gemini Engine
         if (geminiKey) {
           try {
-            console.log('[Tier 1] Streaming response from Gemini (gemini-2.5-flash)...');
             await streamGemini(geminiKey, systemPrompt, messages, controller);
-            console.log('[Tier 1] Stream complete.');
             controller.close();
             return;
           } catch (geminiError: unknown) {
@@ -190,9 +182,7 @@ export async function POST(request: NextRequest) {
         // Tier 2: OpenRouter Fallback Engine
         if (openRouterKey) {
           try {
-            console.log('[Tier 2] Streaming response from OpenRouter Fallback...');
             await streamOpenRouter(openRouterKey, systemPrompt, messages, controller);
-            console.log('[Tier 2] Stream complete.');
             controller.close();
             return;
           } catch (orError: unknown) {
@@ -201,7 +191,6 @@ export async function POST(request: NextRequest) {
         }
 
         // Tier 3: Local Deterministic Engine
-        console.log('[Tier 3] Both Tiers 1 and 2 failed. Dropping to deterministic fallback.');
         await streamLocalFallback(message, context, controller);
         controller.close();
       },
