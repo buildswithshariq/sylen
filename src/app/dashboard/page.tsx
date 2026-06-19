@@ -50,7 +50,7 @@ const itemAnim = {
 /*  Shared sub-components to eliminate duplication between dashboards  */
 /* ------------------------------------------------------------------ */
 
-function DashboardHeader({ title, subtitle, score, ecoLevel, assessmentData, onShared, onRetake }: {
+function DashboardHeader({ title, subtitle, score, ecoLevel, assessmentData, onShared, onRetake }: Readonly<{
   title: string;
   subtitle: string;
   score: SustainabilityScore;
@@ -58,7 +58,7 @@ function DashboardHeader({ title, subtitle, score, ecoLevel, assessmentData, onS
   assessmentData?: AssessmentData;
   onShared: () => void;
   onRetake: () => void;
-}) {
+}>) {
   return (
     <div className="mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
       <div>
@@ -87,11 +87,11 @@ function DashboardHeader({ title, subtitle, score, ecoLevel, assessmentData, onS
   );
 }
 
-function SproutCoachSection({ coach, coachContext, colSpan }: {
+function SproutCoachSection({ coach, coachContext, colSpan }: Readonly<{
   coach: ReturnType<typeof useCoach>;
   coachContext: CoachContext | null;
   colSpan: string;
-}) {
+}>) {
   return (
     <motion.div variants={itemAnim} className={`${colSpan} h-full`} id="sprout-coach-section">
       <GlassCard className="p-0 h-[500px] flex flex-col overflow-hidden">
@@ -116,7 +116,7 @@ function SproutCoachSection({ coach, coachContext, colSpan }: {
   );
 }
 
-function RetakeModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+function RetakeModal({ onConfirm, onCancel }: Readonly<{ onConfirm: () => void; onCancel: () => void }>) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
       <motion.div

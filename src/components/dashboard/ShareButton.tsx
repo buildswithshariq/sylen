@@ -11,7 +11,32 @@ interface ShareButtonProps {
   onShared?: () => void;
 }
 
-export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assessmentData, onShared }: ShareButtonProps) {
+// Helper to build the payload for signing
+function buildReportData(score: SustainabilityScore, ecoLevelName: string, ecoLevelBadge: string, assessmentData?: AssessmentData) {
+  const sorted = [...score.contributions].sort((a, b) => a.amount - b.amount);
+  const topStrength = sorted[0]?.label || 'General Lifestyle';
+  const improvementArea = sorted[sorted.length - 1]?.label || 'Energy Usage';
+
+  return {
+    displayName: assessmentData?.lifestyle?.displayName || '',
+    score: score.score,
+    ecoLevel: ecoLevelName,
+    ecoBadge: ecoLevelBadge,
+    totalEmissions: score.totalEmissions,
+    contributions: score.contributions,
+    topStrength,
+    improvementArea
+  };
+}
+
+// Helper to build the share text
+function buildShareText(score: number, ecoLevelName: string, displayName?: string) {
+  return displayName
+    ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score}/100 and they are a ${ecoLevelName}.`
+    : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score}/100 and I'm a ${ecoLevelName}.`;
+}
+
+export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assessmentData, onShared }: Readonly<ShareButtonProps>) {
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -20,20 +45,7 @@ export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assess
     setIsGenerating(true);
 
     try {
-      const sorted = [...score.contributions].sort((a, b) => a.amount - b.amount);
-      const topStrength = sorted[0]?.label || 'General Lifestyle';
-      const improvementArea = sorted[sorted.length - 1]?.label || 'Energy Usage';
-
-      const reportData = {
-        displayName: assessmentData?.lifestyle?.displayName || '',
-        score: score.score,
-        ecoLevel: ecoLevelName,
-        ecoBadge: ecoLevelBadge,
-        totalEmissions: score.totalEmissions,
-        contributions: score.contributions,
-        topStrength,
-        improvementArea
-      };
+      const reportData = buildReportData(score, ecoLevelName, ecoLevelBadge, assessmentData);
 
       const res = await fetch('/api/share/sign', {
         method: 'POST',
@@ -44,12 +56,9 @@ export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assess
       if (!res.ok) throw new Error('Failed to sign report');
       
       const { token } = await res.json();
-      const generatedUrl = `${window.location.origin}/shared-report?data=${token}`;
+      const generatedUrl = `${globalThis.location.origin}/shared-report?data=${token}`;
 
-      const displayName = assessmentData?.lifestyle?.displayName;
-      const text = displayName
-        ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score.score}/100 and they are a ${ecoLevelName}.`
-        : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score.score}/100 and I'm a ${ecoLevelName}.`;
+      const text = buildShareText(score.score, ecoLevelName, assessmentData?.lifestyle?.displayName);
 
       if (navigator.share) {
         await navigator.share({
@@ -70,10 +79,7 @@ export default function ShareButton({ score, ecoLevelName, ecoLevelBadge, assess
         // Fallback to clipboard if share throws (or fails due to async delay)
         try {
           // If we failed after generating the URL, try to copy it
-          const displayName = assessmentData?.lifestyle?.displayName;
-          const text = displayName
-            ? `Check out ${displayName}'s carbon footprint on Sylen! Their Sustainability Score is ${score.score}/100 and they are a ${ecoLevelName}.`
-            : `I just checked my carbon footprint on Sylen! My Sustainability Score is ${score.score}/100 and I'm a ${ecoLevelName}.`;
+          const text = buildShareText(score.score, ecoLevelName, assessmentData?.lifestyle?.displayName);
             
           await navigator.clipboard.writeText(`${text} (Visit sylen.com)`);
           setCopied(true);
