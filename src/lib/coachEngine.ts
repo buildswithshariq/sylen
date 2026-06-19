@@ -160,6 +160,10 @@ export function generateInitialGreeting(context: CoachContext | null): string {
  * Fallback responses when Gemini API is unavailable.
  * These are still personalized using context data if available.
  */
+function containsAny(text: string, keywords: readonly string[]): boolean {
+  return keywords.some(keyword => text.includes(keyword));
+}
+
 export function getFallbackResponse(
   userMessage: string,
   context: CoachContext | null
@@ -172,24 +176,24 @@ export function getFallbackResponse(
   const topSource = context.score.contributions[0];
   const topRec = context.recommendations[0];
 
-  if (msg.includes('score') || msg.includes('result')) {
+  if (containsAny(msg, ['score', 'result'])) {
     return `Your sustainability score is **${context.score.score}/100** (${context.score.categoryLabel}). Your total annual emissions are ${context.score.totalEmissions.toLocaleString()} kg CO₂e. Your biggest impact area is **${topSource.label}** at ${topSource.percentage}% of your total footprint.`;
   }
 
-  if (msg.includes('improve') || msg.includes('reduce') || msg.includes('better')) {
+  if (containsAny(msg, ['improve', 'reduce', 'better'])) {
     return `Your top recommendation is: **${topRec.title}**. ${topRec.description} This could save approximately ${topRec.estimatedReductionKg.toLocaleString()} kg CO₂e per year. Check out the Recommendations panel for more actions sorted by impact!`;
   }
 
-  if (msg.includes('transport') || msg.includes('car') || msg.includes('commute')) {
+  if (containsAny(msg, ['transport', 'car', 'commute'])) {
     const transportPct = context.score.contributions.find(c => c.category === 'transport')?.percentage ?? 0;
     return `Transportation accounts for ${transportPct}% of your footprint (${context.score.breakdown.transport.toLocaleString()} kg CO₂e/year). ${context.assessment.transport.vehicleType === 'car' ? 'Switching to public transit or carpooling could make a significant difference.' : 'You\'re already using a low-emission transport method — great choice!'}`;
   }
 
-  if (msg.includes('energy') || msg.includes('electric') || msg.includes('ac')) {
+  if (containsAny(msg, ['energy', 'electric', 'ac'])) {
     return `Your home energy use contributes ${context.score.breakdown.energy.toLocaleString()} kg CO₂e/year. ${context.assessment.energy.acHoursPerDay > 4 ? `With ${context.assessment.energy.acHoursPerDay} hours of daily AC usage, reducing by even 1-2 hours could save hundreds of kg CO₂e annually.` : 'Your energy usage is moderate. Focus on efficient appliances and LED lighting for further savings.'}`;
   }
 
-  if (msg.includes('food') || msg.includes('diet') || msg.includes('meat')) {
+  if (containsAny(msg, ['food', 'diet', 'meat'])) {
     return `Your food choices account for ${context.score.breakdown.food.toLocaleString()} kg CO₂e/year. ${context.assessment.food.dietType === 'heavy_meat' ? 'Even small reductions in meat consumption can have a big impact. Try starting with one meat-free day per week.' : context.assessment.food.dietType === 'vegan' ? 'Your plant-based diet is one of the most impactful choices — well done!' : 'Consider incorporating more plant-based meals into your routine.'}`;
   }
 
