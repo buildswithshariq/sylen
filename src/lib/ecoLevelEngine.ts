@@ -2,17 +2,18 @@
 // Sylen — Eco Level / Gamification Engine
 // ============================================================
 
-import { EcoLevel, UserEcoLevel } from '@/types';
-import { ECO_LEVELS } from './constants';
+import { EcoLevel, UserEcoLevel } from "@/types";
+import { ECO_LEVELS } from "./constants";
 
 /**
  * Determine the user's Eco Level from their sustainability score.
  */
 export function getUserEcoLevel(score: number): UserEcoLevel {
   // Find current level
-  const current = ECO_LEVELS.find(
-    (level) => score >= level.minScore && score <= level.maxScore
-  ) ?? ECO_LEVELS[ECO_LEVELS.length - 1]; // Default to lowest
+  const current =
+    ECO_LEVELS.find(
+      (level) => score >= level.minScore && score <= level.maxScore,
+    ) ?? ECO_LEVELS[ECO_LEVELS.length - 1]; // Default to lowest
 
   // Find next level (the one just above current)
   const currentIndex = ECO_LEVELS.indexOf(current);

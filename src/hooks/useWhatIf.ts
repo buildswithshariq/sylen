@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useMemo } from 'react';
-import { AssessmentData, WhatIfResult } from '@/types';
-import { simulateStackedWhatIf, getPresetScenarios } from '@/lib/whatIfEngine';
+import { useState, useCallback, useMemo } from "react";
+import { AssessmentData, WhatIfResult } from "@/types";
+import { simulateStackedWhatIf, getPresetScenarios } from "@/lib/whatIfEngine";
 
 /**
  * Hook for managing the What-If simulator state.
@@ -33,15 +33,20 @@ export function useWhatIf(assessmentData: AssessmentData | null) {
         if (nextIds.length === 0) {
           setResult(null);
         } else {
-          const selectedScenarios = scenarios.filter((s) => nextIds.includes(s.id));
-          const simResult = simulateStackedWhatIf(assessmentData, selectedScenarios);
+          const selectedScenarios = scenarios.filter((s) =>
+            nextIds.includes(s.id),
+          );
+          const simResult = simulateStackedWhatIf(
+            assessmentData,
+            selectedScenarios,
+          );
           setResult(simResult);
         }
-        
+
         return nextIds;
       });
     },
-    [assessmentData, scenarios]
+    [assessmentData, scenarios],
   );
 
   // Clear the simulation

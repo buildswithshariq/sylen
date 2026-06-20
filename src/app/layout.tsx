@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const viewport = {
-  themeColor: '#059669',
+  themeColor: "#059669",
 };
 
 export const metadata: Metadata = {
@@ -23,14 +23,16 @@ export const metadata: Metadata = {
     "AI-powered sustainability insights helping people understand, track, and reduce their carbon footprint.",
   openGraph: {
     title: "Sylen 🌱",
-    description: "AI-powered sustainability insights helping people understand, track, and reduce their carbon footprint.",
+    description:
+      "AI-powered sustainability insights helping people understand, track, and reduce their carbon footprint.",
     siteName: "Sylen",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Sylen 🌱",
-    description: "AI-powered sustainability insights helping people understand, track, and reduce their carbon footprint.",
+    description:
+      "AI-powered sustainability insights helping people understand, track, and reduce their carbon footprint.",
   },
   keywords: [
     "carbon footprint",
@@ -43,15 +45,15 @@ export const metadata: Metadata = {
   authors: [{ name: "Sylen" }],
   icons: {
     icon: [
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon.ico' },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.ico" },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
-  manifest: '/manifest.json',
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -64,9 +66,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans bg-off-white text-stone-900 antialiased">
         <FramerMotionProvider>
           <Navbar />
-          <main className="flex-grow flex flex-col">
-            {children}
-          </main>
+          <main className="flex-grow flex flex-col">{children}</main>
           <Footer />
           <SproutProvider />
           <PWAInstallPrompt />
@@ -75,4 +75,3 @@ export default function RootLayout({
     </html>
   );
 }
-

@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import TransitionLink from '@/components/ui/TransitionLink';
-
+import { m as motion } from "framer-motion";
+import TransitionLink from "@/components/ui/TransitionLink";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: 'easeOut' as const },
+    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" as const },
   }),
 };
 
@@ -24,7 +23,7 @@ function HeroIllustration() {
     <div className="relative w-full h-full flex items-center justify-center perspective-[1000px]">
       {/* Central glow */}
       <div className="absolute inset-0 bg-emerald-400/20 rounded-full blur-[100px] animate-pulse-soft" />
-      
+
       {/* Main floating card */}
       <motion.div
         animate={{ y: [-10, 10, -10] }}
@@ -34,12 +33,18 @@ function HeroIllustration() {
       >
         <div className="flex justify-between items-start mb-6">
           <div>
-            <p className="text-sm font-semibold text-stone-500">Sustainability Score</p>
-            <h3 className="text-4xl font-bold text-stone-900 mt-1">85<span className="text-xl text-stone-400 font-medium">/100</span></h3>
+            <p className="text-sm font-semibold text-stone-500">
+              Sustainability Score
+            </p>
+            <h3 className="text-4xl font-bold text-stone-900 mt-1">
+              85<span className="text-xl text-stone-500 font-medium">/100</span>
+            </h3>
           </div>
-          <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">Excellent</span>
+          <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
+            Excellent
+          </span>
         </div>
-        
+
         <div className="space-y-4">
           <div>
             <div className="flex justify-between text-xs mb-1">
@@ -74,7 +79,12 @@ function HeroIllustration() {
       {/* Floating element Top Right */}
       <motion.div
         animate={{ y: [5, -15, 5] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
         className="absolute z-30 top-[15%] right-[5%] w-48 glass rounded-2xl p-4 shadow-xl border border-white/50 backdrop-blur-xl"
         style={{ rotateX: -5, rotateY: -15, translateZ: 50 }}
       >
@@ -92,7 +102,12 @@ function HeroIllustration() {
       {/* Floating element Bottom Left */}
       <motion.div
         animate={{ y: [-5, 15, -5] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.5,
+        }}
         className="absolute z-30 bottom-[15%] left-[5%] w-56 glass rounded-2xl p-4 shadow-xl border border-white/50 backdrop-blur-xl"
         style={{ rotateX: 10, rotateY: 5, translateZ: 80 }}
       >
@@ -102,16 +117,38 @@ function HeroIllustration() {
           </div>
           <div>
             <p className="text-xl font-bold text-stone-900">-2.4t</p>
-            <p className="text-xs text-stone-500 font-medium">CO₂e Reduced this year</p>
+            <p className="text-xs text-stone-500 font-medium">
+              CO₂e Reduced this year
+            </p>
           </div>
         </div>
       </motion.div>
-      
+
       {/* Subtle connecting lines / tech visualizer background */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center">
-        <svg viewBox="0 0 400 400" className="w-full h-full animate-spin-slow">
-          <circle cx="200" cy="200" r="150" fill="none" stroke="#059669" strokeWidth="1" strokeDasharray="4 8" />
-          <circle cx="200" cy="200" r="100" fill="none" stroke="#0EA5E9" strokeWidth="1" strokeDasharray="2 6" />
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 400 400"
+          className="w-full h-full animate-spin-slow"
+        >
+          <circle
+            cx="200"
+            cy="200"
+            r="150"
+            fill="none"
+            stroke="#059669"
+            strokeWidth="1"
+            strokeDasharray="4 8"
+          />
+          <circle
+            cx="200"
+            cy="200"
+            r="100"
+            fill="none"
+            stroke="#0EA5E9"
+            strokeWidth="1"
+            strokeDasharray="2 6"
+          />
         </svg>
       </div>
     </div>
@@ -139,7 +176,7 @@ export default function Home() {
             >
               <motion.div variants={fadeUp} custom={0}>
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700 text-sm font-medium shadow-sm">
-                  <span className="text-emerald-600">🌿</span>{' '}
+                  <span className="text-emerald-600">🌿</span>{" "}
                   <span>Environmental Intelligence Platform</span>
                 </span>
               </motion.div>
@@ -161,11 +198,16 @@ export default function Home() {
                 custom={2}
                 className="text-lg sm:text-xl text-stone-600 max-w-lg leading-relaxed"
               >
-                Your complete carbon reduction platform. Get actionable insights,
-                simulate lifestyle changes, and build sustainable habits — one step at a time.
+                Your complete carbon reduction platform. Get actionable
+                insights, simulate lifestyle changes, and build sustainable
+                habits — one step at a time.
               </motion.p>
 
-              <motion.div variants={fadeUp} custom={3} className="flex flex-wrap gap-4">
+              <motion.div
+                variants={fadeUp}
+                custom={3}
+                className="flex flex-wrap gap-4"
+              >
                 <TransitionLink
                   href="/assessment"
                   className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold 
@@ -174,8 +216,19 @@ export default function Home() {
                     hover:shadow-emerald-600/30 active:scale-[0.98]"
                 >
                   Start Assessment
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
                   </svg>
                 </TransitionLink>
                 <TransitionLink
@@ -188,7 +241,11 @@ export default function Home() {
                 </TransitionLink>
               </motion.div>
 
-              <motion.div variants={fadeUp} custom={4} className="flex items-center gap-8 pt-4">
+              <motion.div
+                variants={fadeUp}
+                custom={4}
+                className="flex items-center gap-8 pt-4"
+              >
                 <div>
                   <p className="text-2xl font-bold text-stone-800">5+</p>
                   <p className="text-xs text-stone-500">Impact Categories</p>
@@ -210,7 +267,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
               className="relative h-[500px] lg:h-[600px] hidden md:block"
             >
               <HeroIllustration />
@@ -234,30 +291,30 @@ export default function Home() {
               Why Your Carbon Footprint Matters
             </h2>
             <p className="text-lg text-stone-500 max-w-2xl mx-auto">
-              The average person emits 16 tonnes of CO₂e per year. Small changes in
-              daily habits can reduce this by up to 30%.
+              The average person emits 16 tonnes of CO₂e per year. Small changes
+              in daily habits can reduce this by up to 30%.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                icon: '🌡️',
-                title: '1.5°C Target',
+                icon: "🌡️",
+                title: "1.5°C Target",
                 description:
-                  'We need to halve global emissions by 2030 to stay within safe limits. Individual action matters.',
+                  "We need to halve global emissions by 2030 to stay within safe limits. Individual action matters.",
               },
               {
-                icon: '🏭',
-                title: '73% From Energy',
+                icon: "🏭",
+                title: "73% From Energy",
                 description:
-                  'Energy use in homes, transport, and food production drives the majority of personal emissions.',
+                  "Energy use in homes, transport, and food production drives the majority of personal emissions.",
               },
               {
-                icon: '🌱',
-                title: '30% Reducible',
+                icon: "🌱",
+                title: "30% Reducible",
                 description:
-                  'Studies show individuals can cut up to 30% of their footprint through informed lifestyle changes.',
+                  "Studies show individuals can cut up to 30% of their footprint through informed lifestyle changes.",
               },
             ].map((item, i) => (
               <motion.div
@@ -272,7 +329,9 @@ export default function Home() {
                 <h3 className="text-xl font-semibold text-stone-800 mb-2">
                   {item.title}
                 </h3>
-                <p className="text-stone-500 leading-relaxed">{item.description}</p>
+                <p className="text-stone-500 leading-relaxed">
+                  {item.description}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -280,7 +339,10 @@ export default function Home() {
       </section>
 
       {/* ============ How It Works ============ */}
-      <section id="how-it-works" className="py-24 bg-gradient-to-b from-transparent to-emerald-50/30">
+      <section
+        id="how-it-works"
+        className="py-24 bg-gradient-to-b from-transparent to-emerald-50/30"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -293,35 +355,40 @@ export default function Home() {
               How Sylen Works
             </h2>
             <p className="text-lg text-stone-500 max-w-2xl mx-auto">
-              Four simple steps to understanding and reducing your environmental impact.
+              Four simple steps to understanding and reducing your environmental
+              impact.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                step: '01',
-                title: 'Take Assessment',
-                description: 'Answer simple questions about your transport, energy use, diet, and lifestyle.',
-                icon: '📋',
+                step: "01",
+                title: "Take Assessment",
+                description:
+                  "Answer simple questions about your transport, energy use, diet, and lifestyle.",
+                icon: "📋",
               },
               {
-                step: '02',
-                title: 'Analyze Footprint',
-                description: 'Our engine calculates your exact carbon footprint using EPA emission factors.',
-                icon: '🔍',
+                step: "02",
+                title: "Analyze Footprint",
+                description:
+                  "Our engine calculates your exact carbon footprint using EPA emission factors.",
+                icon: "🔍",
               },
               {
-                step: '03',
-                title: 'Receive Personalized Insights',
-                description: 'Get custom recommendations and a tailored 4-week roadmap to start your journey.',
-                icon: '💡',
+                step: "03",
+                title: "Receive Personalized Insights",
+                description:
+                  "Get custom recommendations and a tailored 4-week roadmap to start your journey.",
+                icon: "💡",
               },
               {
-                step: '04',
-                title: 'Reduce Environmental Impact',
-                description: 'Track your progress, level up your Eco Status, and see your carbon savings grow.',
-                icon: '🌍',
+                step: "04",
+                title: "Reduce Environmental Impact",
+                description:
+                  "Track your progress, level up your Eco Status, and see your carbon savings grow.",
+                icon: "🌍",
               },
             ].map((item, i) => (
               <motion.div
@@ -364,41 +431,47 @@ export default function Home() {
               Powerful Features
             </h2>
             <p className="text-lg text-stone-500 max-w-2xl mx-auto">
-              Everything you need to understand, track, and reduce your carbon footprint.
+              Everything you need to understand, track, and reduce your carbon
+              footprint.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                title: 'Carbon Intelligence Engine',
-                description: 'Real emission factors from EPA and DEFRA data. Accurate, reproducible calculations for transport, energy, food, and lifestyle.',
-                icon: '⚡',
-                span: 'lg:col-span-2',
+                title: "Carbon Intelligence Engine",
+                description:
+                  "Real emission factors from EPA and DEFRA data. Accurate, reproducible calculations for transport, energy, food, and lifestyle.",
+                icon: "⚡",
+                span: "lg:col-span-2",
               },
               {
-                title: 'AI Sustainability Coach',
-                description: 'Explains your results, personalizes recommendations, and answers your sustainability questions.',
-                icon: '🤖',
-                span: '',
+                title: "AI Sustainability Coach",
+                description:
+                  "Explains your results, personalizes recommendations, and answers your sustainability questions.",
+                icon: "🤖",
+                span: "",
               },
               {
-                title: 'What-If Simulator',
-                description: 'Test hypothetical changes before committing. See exactly how switching to transit or going vegetarian would impact your score.',
-                icon: '🔮',
-                span: '',
+                title: "What-If Simulator",
+                description:
+                  "Test hypothetical changes before committing. See exactly how switching to transit or going vegetarian would impact your score.",
+                icon: "🔮",
+                span: "",
               },
               {
-                title: 'Eco Level System',
-                description: 'Gamified progression from High Impact to Earth Guardian. Track your level, earn badges, and see your progress.',
-                icon: '🏆',
-                span: '',
+                title: "Eco Level System",
+                description:
+                  "Gamified progression from High Impact to Earth Guardian. Track your level, earn badges, and see your progress.",
+                icon: "🏆",
+                span: "",
               },
               {
-                title: '4-Week Roadmap',
-                description: 'Personalized action plan starting with quick wins and building up to lasting habits. Estimated CO₂e savings for each week.',
-                icon: '🗺️',
-                span: '',
+                title: "4-Week Roadmap",
+                description:
+                  "Personalized action plan starting with quick wins and building up to lasting habits. Estimated CO₂e savings for each week.",
+                icon: "🗺️",
+                span: "",
               },
             ].map((feature, i) => (
               <motion.div
@@ -439,8 +512,8 @@ export default function Home() {
               Start Your Sustainability Journey
             </h2>
             <p className="text-lg text-stone-500 max-w-xl mx-auto mb-8">
-              It takes less than 2 minutes. Understand your impact. Get a personalized plan. 
-              Start making a difference today.
+              It takes less than 2 minutes. Understand your impact. Get a
+              personalized plan. Start making a difference today.
             </p>
             <TransitionLink
               href="/assessment"
@@ -450,14 +523,24 @@ export default function Home() {
                 hover:shadow-emerald-600/30 active:scale-[0.98]"
             >
               Start Free Assessment
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                aria-hidden="true"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </TransitionLink>
           </motion.div>
         </div>
       </section>
-
     </main>
   );
 }

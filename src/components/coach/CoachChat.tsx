@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { m as motion, AnimatePresence } from 'framer-motion';
-import { CoachMessage, CoachContext } from '@/types';
-import PriorityActions from '@/components/dashboard/PriorityActions';
-import EmissionBreakdown from '@/components/dashboard/EmissionBreakdown';
+import { useState, useRef, useEffect } from "react";
+import { m as motion, AnimatePresence } from "framer-motion";
+import { CoachMessage, CoachContext } from "@/types";
+import PriorityActions from "@/components/dashboard/PriorityActions";
+import EmissionBreakdown from "@/components/dashboard/EmissionBreakdown";
 
 interface CoachChatProps {
   messages: CoachMessage[];
@@ -16,10 +16,24 @@ interface CoachChatProps {
 }
 
 const quickActions = [
-  { label: '🎯 Explain my score', message: 'Explain my sustainability score and what it means.' },
-  { label: '📈 How can I improve?', message: 'What are the most impactful things I can do to improve my score?' },
-  { label: '🗺️ Create action plan', message: 'Create a personalized action plan for me to reduce my carbon footprint.' },
-  { label: '🌍 Compare to average', message: 'How does my carbon footprint compare to the national and global average?' },
+  {
+    label: "🎯 Explain my score",
+    message: "Explain my sustainability score and what it means.",
+  },
+  {
+    label: "📈 How can I improve?",
+    message: "What are the most impactful things I can do to improve my score?",
+  },
+  {
+    label: "🗺️ Create action plan",
+    message:
+      "Create a personalized action plan for me to reduce my carbon footprint.",
+  },
+  {
+    label: "🌍 Compare to average",
+    message:
+      "How does my carbon footprint compare to the national and global average?",
+  },
 ];
 
 export default function CoachChat({
@@ -30,7 +44,7 @@ export default function CoachChat({
   onInitialize,
   context,
 }: CoachChatProps) {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
@@ -46,7 +60,8 @@ export default function CoachChat({
   // Auto-scroll to bottom (isolated to chat container)
   useEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
 
@@ -54,7 +69,7 @@ export default function CoachChat({
     e.preventDefault();
     if (!input.trim() || isLoading) return;
     onSendMessage(input);
-    setInput('');
+    setInput("");
   };
 
   const handleQuickAction = (message: string) => {
@@ -65,7 +80,7 @@ export default function CoachChat({
   return (
     <div className="flex flex-col h-full">
       {/* Chat Messages */}
-      <div 
+      <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0"
       >
@@ -76,51 +91,67 @@ export default function CoachChat({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                  msg.role === 'user'
-                    ? 'bg-emerald-600 text-white rounded-br-sm'
-                    : 'bg-white/70 backdrop-blur-sm border border-white/30 text-stone-800 rounded-bl-sm'
+                  msg.role === "user"
+                    ? "bg-emerald-600 text-white rounded-br-sm"
+                    : "bg-white/70 backdrop-blur-sm border border-white/30 text-stone-800 rounded-bl-sm"
                 }`}
               >
-                {msg.role === 'assistant' && (
+                {msg.role === "assistant" && (
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <span className="text-sm">🌿</span>
-                    <span className="text-xs font-medium text-emerald-700">Sprout Coach AI 🌱</span>
+                    <span className="text-xs font-medium text-emerald-700">
+                      Sprout Coach AI 🌱
+                    </span>
                   </div>
                 )}
                 <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                  {msg.content.split('**').map((part, i) =>
-                    i % 2 === 1 ? (
-                      <strong key={`${msg.id}-b-${part.slice(0, 20)}`}>{part}</strong>
-                    ) : (
-                      <span key={`${msg.id}-t-${i}-${part.slice(0, 12)}`}>{part}</span>
-                    )
-                  )}
+                  {msg.content
+                    .split("**")
+                    .map((part, i) =>
+                      i % 2 === 1 ? (
+                        <strong key={`${msg.id}-b-${part.slice(0, 20)}`}>
+                          {part}
+                        </strong>
+                      ) : (
+                        <span key={`${msg.id}-t-${i}-${part.slice(0, 12)}`}>
+                          {part}
+                        </span>
+                      ),
+                    )}
                 </div>
-                
+
                 {/* Generative UI Cards */}
                 <AnimatePresence>
-                  {!msg.isStreaming && msg.uiCard === 'priority' && context && (
+                  {!msg.isStreaming && msg.uiCard === "priority" && context && (
                     <motion.div
                       initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                      animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                      animate={{ opacity: 1, height: "auto", marginTop: 16 }}
                       className="pt-4 border-t border-emerald-100/50 overflow-hidden"
                     >
-                      <PriorityActions recommendations={context.recommendations.slice(0, 3)} compact={true} />
+                      <PriorityActions
+                        recommendations={context.recommendations.slice(0, 3)}
+                        compact={true}
+                      />
                     </motion.div>
                   )}
-                  {!msg.isStreaming && msg.uiCard === 'breakdown' && context && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                      animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                      className="pt-4 border-t border-emerald-100/50 overflow-hidden"
-                    >
-                      <EmissionBreakdown contributions={context.score?.contributions || []} compact={true} />
-                    </motion.div>
-                  )}
+                  {!msg.isStreaming &&
+                    msg.uiCard === "breakdown" &&
+                    context && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+                        className="pt-4 border-t border-emerald-100/50 overflow-hidden"
+                      >
+                        <EmissionBreakdown
+                          contributions={context.score?.contributions || []}
+                          compact={true}
+                        />
+                      </motion.div>
+                    )}
                 </AnimatePresence>
               </div>
             </motion.div>
@@ -137,12 +168,23 @@ export default function CoachChat({
             <div className="bg-white/70 backdrop-blur-sm border border-white/30 rounded-2xl rounded-bl-sm px-4 py-3">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <span className="text-sm">🌿</span>
-                <span className="text-xs font-medium text-emerald-700">Sprout Coach AI 🌱</span>
+                <span className="text-xs font-medium text-emerald-700">
+                  Sprout Coach AI 🌱
+                </span>
               </div>
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div
+                  className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0ms" }}
+                />
+                <div
+                  className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                />
+                <div
+                  className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                />
               </div>
             </div>
           </motion.div>
@@ -150,9 +192,7 @@ export default function CoachChat({
 
         {/* Error */}
         {error && (
-          <div className="text-center text-sm text-red-500 py-2">
-            {error}
-          </div>
+          <div className="text-center text-sm text-red-500 py-2">{error}</div>
         )}
 
         <div ref={chatEndRef} />
@@ -178,7 +218,10 @@ export default function CoachChat({
       )}
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 pt-2 border-t border-white/20">
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 pt-2 border-t border-white/20"
+      >
         <div className="flex gap-2">
           <input
             type="text"
@@ -187,7 +230,7 @@ export default function CoachChat({
             placeholder="Ask about your carbon footprint..."
             disabled={isLoading}
             className="flex-1 px-4 py-2.5 rounded-xl bg-white/60 backdrop-blur-sm 
-              border border-white/30 text-sm text-stone-800 placeholder:text-stone-400
+              border border-white/30 text-sm text-stone-800 placeholder:text-stone-500
               focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-300
               disabled:opacity-50 transition-all"
           />

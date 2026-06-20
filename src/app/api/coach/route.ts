@@ -5,23 +5,23 @@
 // Tier 3: Local Deterministic Engine
 // ============================================================
 
-import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenAI } from '@google/genai';
-import { CoachContext, CoachMessage } from '@/types';
-import { buildChatMessages, getFallbackResponse } from '@/lib/coachEngine';
+import { NextRequest, NextResponse } from "next/server";
+import { GoogleGenAI } from "@google/genai";
+import { CoachContext, CoachMessage } from "@/types";
+import { buildChatMessages, getFallbackResponse } from "@/lib/coachEngine";
 
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
 
 async function streamOpenRouter(
   apiKey: string,
   systemPrompt: string,
   messages: { role: string; content: string }[],
-  controller: ReadableStreamDefaultController
+  controller: ReadableStreamDefaultController,
 ) {
   const models = [
-    'google/gemma-4-31b-it:free',
-    'poolside/laguna-xs.2:free',
-    'poolside/laguna-m.1:free',
+    "google/gemma-4-31b-it:free",
+    "poolside/laguna-xs.2:free",
+    "poolside/laguna-m.1:free",
   ];
   const array = new Uint32Array(1);
   crypto.getRandomValues(array);
@@ -29,20 +29,20 @@ async function streamOpenRouter(
   const model = models[Math.floor(randomFraction * models.length)];
 
   const formattedMessages = [
-    { role: 'system', content: systemPrompt },
+    { role: "system", content: systemPrompt },
     ...messages.map((m) => ({
-      role: m.role === 'model' ? 'assistant' : m.role,
+      role: m.role === "model" ? "assistant" : m.role,
       content: m.content,
     })),
   ];
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'http://localhost:3000',
-      'X-Title': 'Sylen',
+      "Content-Type": "application/json",
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Sylen",
     },
     body: JSON.stringify({
       model,
@@ -58,7 +58,7 @@ async function streamOpenRouter(
   }
 
   if (!res.body) {
-    throw new Error('No body in OpenRouter response');
+    throw new Error("No body in OpenRouter response");
   }
 
   const reader = res.body.getReader();
@@ -69,16 +69,16 @@ async function streamOpenRouter(
     if (done) break;
 
     const chunk = decoder.decode(value, { stream: true });
-    const lines = chunk.split('\n').filter((line) => line.trim() !== '');
+    const lines = chunk.split("\n").filter((line) => line.trim() !== "");
 
     for (const line of lines) {
-      if (line.replace(/^data: /, '') === '[DONE]') {
+      if (line.replace(/^data: /, "") === "[DONE]") {
         return;
       }
-      if (line.startsWith('data: ')) {
+      if (line.startsWith("data: ")) {
         try {
-          const data = JSON.parse(line.replace(/^data: /, ''));
-          const text = data.choices[0]?.delta?.content || '';
+          const data = JSON.parse(line.replace(/^data: /, ""));
+          const text = data.choices[0]?.delta?.content || "";
           if (text) {
             controller.enqueue(new TextEncoder().encode(text));
           }
@@ -97,14 +97,14 @@ async function streamGemini(
   apiKey: string,
   systemPrompt: string,
   messages: { role: string; content: string }[],
-  controller: ReadableStreamDefaultController
+  controller: ReadableStreamDefaultController,
 ) {
   const ai = new GoogleGenAI({ apiKey });
 
   const responseStream = await ai.models.generateContentStream({
-    model: 'gemini-2.5-flash',
+    model: "gemini-2.5-flash",
     contents: messages.map((m) => ({
-      role: m.role as 'user' | 'model',
+      role: m.role as "user" | "model",
       parts: [{ text: m.content }],
     })),
     config: {
@@ -128,13 +128,11 @@ async function streamGemini(
 async function streamLocalFallback(
   message: string,
   context: CoachContext,
-  controller: ReadableStreamDefaultController
+  controller: ReadableStreamDefaultController,
 ) {
   const localContent = getFallbackResponse(message, context);
   for (let i = 0; i < localContent.length; i += 20) {
-    controller.enqueue(
-      new TextEncoder().encode(localContent.slice(i, i + 20))
-    );
+    controller.enqueue(new TextEncoder().encode(localContent.slice(i, i + 20)));
     await new Promise((r) => setTimeout(r, 10));
   }
 }
@@ -152,15 +150,15 @@ export async function POST(request: NextRequest) {
 
     if (!message) {
       return NextResponse.json(
-        { error: 'Missing required field: message' },
-        { status: 400 }
+        { error: "Missing required field: message" },
+        { status: 400 },
       );
     }
 
     const { systemPrompt, messages } = buildChatMessages(
       context,
       history || [],
-      message
+      message,
     );
 
     const geminiKey = process.env.GOOGLE_GEMINI_API_KEY;
@@ -175,18 +173,31 @@ export async function POST(request: NextRequest) {
             controller.close();
             return;
           } catch (geminiError: unknown) {
-            console.error('[Tier 1] ERROR:', geminiError instanceof Error ? geminiError.message : String(geminiError));
+            console.error(
+              "[Tier 1] ERROR:",
+              geminiError instanceof Error
+                ? geminiError.message
+                : String(geminiError),
+            );
           }
         }
 
         // Tier 2: OpenRouter Fallback Engine
         if (openRouterKey) {
           try {
-            await streamOpenRouter(openRouterKey, systemPrompt, messages, controller);
+            await streamOpenRouter(
+              openRouterKey,
+              systemPrompt,
+              messages,
+              controller,
+            );
             controller.close();
             return;
           } catch (orError: unknown) {
-            console.error('[Tier 2] ERROR:', orError instanceof Error ? orError.message : String(orError));
+            console.error(
+              "[Tier 2] ERROR:",
+              orError instanceof Error ? orError.message : String(orError),
+            );
           }
         }
 
@@ -198,16 +209,19 @@ export async function POST(request: NextRequest) {
 
     return new Response(stream, {
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Transfer-Encoding': 'chunked',
-        'Cache-Control': 'no-cache, no-transform',
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Cache-Control": "no-cache, no-transform",
       },
     });
   } catch (error: unknown) {
-    console.error('Coach API parsing/execution error:', error instanceof Error ? error.message : String(error));
+    console.error(
+      "Coach API parsing/execution error:",
+      error instanceof Error ? error.message : String(error),
+    );
     return NextResponse.json(
-      { error: 'Failed to generate response. Please try again.' },
-      { status: 500 }
+      { error: "Failed to generate response. Please try again." },
+      { status: 500 },
     );
   }
 }

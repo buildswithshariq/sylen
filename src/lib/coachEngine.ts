@@ -4,7 +4,7 @@
 // AI NEVER calculates — only explains, personalizes, coaches.
 // ============================================================
 
-import { CoachContext, CoachMessage } from '@/types';
+import { CoachContext, CoachMessage } from "@/types";
 
 /**
  * Build the system prompt for the AI coach.
@@ -39,12 +39,18 @@ export function buildSystemPrompt(context: CoachContext | null): string {
   const topSource = score.contributions[0];
   const topRecs = recommendations
     .slice(0, 5)
-    .map((r, i) => `${i + 1}. ${r.title} (saves ~${r.estimatedReductionKg} kg CO₂e/yr, difficulty: ${r.difficulty})`)
-    .join('\n');
+    .map(
+      (r, i) =>
+        `${i + 1}. ${r.title} (saves ~${r.estimatedReductionKg} kg CO₂e/yr, difficulty: ${r.difficulty})`,
+    )
+    .join("\n");
 
   const breakdownStr = score.contributions
-    .map((c) => `- ${c.label}: ${score.breakdown[c.category as keyof typeof score.breakdown].toLocaleString()} kg CO₂e/yr (${c.percentage}%)`)
-    .join('\n');
+    .map(
+      (c) =>
+        `- ${c.label}: ${score.breakdown[c.category as keyof typeof score.breakdown].toLocaleString()} kg CO₂e/yr (${c.percentage}%)`,
+    )
+    .join("\n");
 
   const isChampion = score.score >= 90;
 
@@ -82,20 +88,20 @@ export function buildSystemPrompt(context: CoachContext | null): string {
 **Sustainability Score:** ${score.score}/100 (${score.categoryLabel})
 **Total Annual Emissions:** ${score.totalEmissions.toLocaleString()} kg CO₂e/year
 **Comparison to US Average:** ${score.comparisonToAverage > 0 ? `${score.comparisonToAverage}% above` : `${Math.abs(score.comparisonToAverage)}% below`} average (16,000 kg CO₂e/yr)
-**Eco Level:** ${ecoLevel.current.badge} ${ecoLevel.current.name}${ecoLevel.next ? ` (${ecoLevel.pointsToNext} points to ${ecoLevel.next.name})` : ''}
-${isChampion ? '**Status:** CLIMATE CHAMPION 🏆' : ''}
+**Eco Level:** ${ecoLevel.current.badge} ${ecoLevel.current.name}${ecoLevel.next ? ` (${ecoLevel.pointsToNext} points to ${ecoLevel.next.name})` : ""}
+${isChampion ? "**Status:** CLIMATE CHAMPION 🏆" : ""}
 
 **Emission Breakdown:**
 ${breakdownStr}
 
 **Biggest Impact Area:** ${topSource.label} (${topSource.percentage}% of total)
 
-**Transport:** ${assessment.transport.vehicleType === 'car' ? `Drives ${assessment.transport.fuelType} car, ${assessment.transport.dailyDistanceKm}km/day` : `Uses ${assessment.transport.vehicleType.replace('_', ' ')}`}
+**Transport:** ${assessment.transport.vehicleType === "car" ? `Drives ${assessment.transport.fuelType} car, ${assessment.transport.dailyDistanceKm}km/day` : `Uses ${assessment.transport.vehicleType.replace("_", " ")}`}
 **Energy:** ${assessment.energy.monthlyElectricityKwh} kWh/month, AC ${assessment.energy.acHoursPerDay} hrs/day
-**Food:** ${assessment.food.dietType.replace('_', ' ')} diet, ${assessment.food.meatMealsPerWeek} meat meals/week
+**Food:** ${assessment.food.dietType.replace("_", " ")} diet, ${assessment.food.meatMealsPerWeek} meat meals/week
 **Lifestyle:** ${assessment.lifestyle.flightsPerYear} flights/year, shops ${assessment.lifestyle.shoppingFrequency}, recycles ${assessment.lifestyle.recyclingHabit}
 
-${!isChampion ? `**Top Recommended Actions:**\n${topRecs}\n` : ''}
+${!isChampion ? `**Top Recommended Actions:**\n${topRecs}\n` : ""}
 ${responsibilities}
 
 ## RULES — FOLLOW STRICTLY
@@ -104,9 +110,9 @@ ${responsibilities}
 3. Be encouraging, specific, and actionable.
 4. Keep responses concise (2-4 paragraphs max).
 5. Use the user's actual data to personalize every response.
-${!isChampion ? '6. Suggest specific actions from the recommendations list when relevant.' : '6. Focus on celebrating their existing good habits.'}
+${!isChampion ? "6. Suggest specific actions from the recommendations list when relevant." : "6. Focus on celebrating their existing good habits."}
 7. Use emojis sparingly for warmth.
-${!isChampion ? '8. When asked about improvements, reference the estimated savings from recommendations.' : ''}
+${!isChampion ? "8. When asked about improvements, reference the estimated savings from recommendations." : ""}
 9. If asked something outside sustainability/environment, politely redirect.
 10. Format responses with short paragraphs for readability.
 11. Always identify yourself as "Sprout Coach AI" — never as a generic AI.`;
@@ -119,7 +125,7 @@ ${!isChampion ? '8. When asked about improvements, reference the estimated savin
 export function buildChatMessages(
   context: CoachContext | null,
   conversationHistory: CoachMessage[],
-  newUserMessage: string
+  newUserMessage: string,
 ): { systemPrompt: string; messages: { role: string; content: string }[] } {
   const systemPrompt = buildSystemPrompt(context);
 
@@ -127,12 +133,12 @@ export function buildChatMessages(
   const recentHistory = conversationHistory.slice(-5);
 
   const messages = recentHistory.map((msg) => ({
-    role: msg.role === 'user' ? 'user' : 'model',
+    role: msg.role === "user" ? "user" : "model",
     content: msg.content,
   }));
 
   messages.push({
-    role: 'user',
+    role: "user",
     content: newUserMessage,
   });
 
@@ -161,12 +167,12 @@ export function generateInitialGreeting(context: CoachContext | null): string {
  * These are still personalized using context data if available.
  */
 function containsAny(text: string, keywords: readonly string[]): boolean {
-  return keywords.some(keyword => text.includes(keyword));
+  return keywords.some((keyword) => text.includes(keyword));
 }
 
 export function getFallbackResponse(
   userMessage: string,
-  context: CoachContext | null
+  context: CoachContext | null,
 ): string {
   if (!context) {
     return `Hi there! I'm Sprout 🌱. I can help answer questions about sustainability, carbon footprints, and Sylen. Try taking the assessment for more personalized insights!`;
@@ -176,25 +182,27 @@ export function getFallbackResponse(
   const topSource = context.score.contributions[0];
   const topRec = context.recommendations[0];
 
-  if (containsAny(msg, ['score', 'result'])) {
+  if (containsAny(msg, ["score", "result"])) {
     return `Your sustainability score is **${context.score.score}/100** (${context.score.categoryLabel}). Your total annual emissions are ${context.score.totalEmissions.toLocaleString()} kg CO₂e. Your biggest impact area is **${topSource.label}** at ${topSource.percentage}% of your total footprint.`;
   }
 
-  if (containsAny(msg, ['improve', 'reduce', 'better'])) {
+  if (containsAny(msg, ["improve", "reduce", "better"])) {
     return `Your top recommendation is: **${topRec.title}**. ${topRec.description} This could save approximately ${topRec.estimatedReductionKg.toLocaleString()} kg CO₂e per year. Check out the Recommendations panel for more actions sorted by impact!`;
   }
 
-  if (containsAny(msg, ['transport', 'car', 'commute'])) {
-    const transportPct = context.score.contributions.find(c => c.category === 'transport')?.percentage ?? 0;
-    return `Transportation accounts for ${transportPct}% of your footprint (${context.score.breakdown.transport.toLocaleString()} kg CO₂e/year). ${context.assessment.transport.vehicleType === 'car' ? 'Switching to public transit or carpooling could make a significant difference.' : 'You\'re already using a low-emission transport method — great choice!'}`;
+  if (containsAny(msg, ["transport", "car", "commute"])) {
+    const transportPct =
+      context.score.contributions.find((c) => c.category === "transport")
+        ?.percentage ?? 0;
+    return `Transportation accounts for ${transportPct}% of your footprint (${context.score.breakdown.transport.toLocaleString()} kg CO₂e/year). ${context.assessment.transport.vehicleType === "car" ? "Switching to public transit or carpooling could make a significant difference." : "You're already using a low-emission transport method — great choice!"}`;
   }
 
-  if (containsAny(msg, ['energy', 'electric', 'ac'])) {
-    return `Your home energy use contributes ${context.score.breakdown.energy.toLocaleString()} kg CO₂e/year. ${context.assessment.energy.acHoursPerDay > 4 ? `With ${context.assessment.energy.acHoursPerDay} hours of daily AC usage, reducing by even 1-2 hours could save hundreds of kg CO₂e annually.` : 'Your energy usage is moderate. Focus on efficient appliances and LED lighting for further savings.'}`;
+  if (containsAny(msg, ["energy", "electric", "ac"])) {
+    return `Your home energy use contributes ${context.score.breakdown.energy.toLocaleString()} kg CO₂e/year. ${context.assessment.energy.acHoursPerDay > 4 ? `With ${context.assessment.energy.acHoursPerDay} hours of daily AC usage, reducing by even 1-2 hours could save hundreds of kg CO₂e annually.` : "Your energy usage is moderate. Focus on efficient appliances and LED lighting for further savings."}`;
   }
 
-  if (containsAny(msg, ['food', 'diet', 'meat'])) {
-    return `Your food choices account for ${context.score.breakdown.food.toLocaleString()} kg CO₂e/year. ${context.assessment.food.dietType === 'heavy_meat' ? 'Even small reductions in meat consumption can have a big impact. Try starting with one meat-free day per week.' : context.assessment.food.dietType === 'vegan' ? 'Your plant-based diet is one of the most impactful choices — well done!' : 'Consider incorporating more plant-based meals into your routine.'}`;
+  if (containsAny(msg, ["food", "diet", "meat"])) {
+    return `Your food choices account for ${context.score.breakdown.food.toLocaleString()} kg CO₂e/year. ${context.assessment.food.dietType === "heavy_meat" ? "Even small reductions in meat consumption can have a big impact. Try starting with one meat-free day per week." : context.assessment.food.dietType === "vegan" ? "Your plant-based diet is one of the most impactful choices — well done!" : "Consider incorporating more plant-based meals into your routine."}`;
   }
 
   return `Your sustainability score is **${context.score.score}/100**. I can help you understand your carbon footprint, explain your results, or suggest specific actions to improve. Try asking about your biggest emission sources, how to improve your score, or specific areas like transport, energy, or food!`;

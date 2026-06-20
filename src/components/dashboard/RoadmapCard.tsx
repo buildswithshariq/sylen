@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { Roadmap, RoadmapWeek, Difficulty } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
-import Badge from '@/components/ui/Badge';
+import { m as motion } from "framer-motion";
+import type { Roadmap, RoadmapWeek, Difficulty } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
+import Badge from "@/components/ui/Badge";
 
 interface RoadmapCardProps {
   roadmap: Roadmap;
@@ -12,11 +12,11 @@ interface RoadmapCardProps {
 
 const difficultyBadge: Record<
   Difficulty,
-  { variant: 'success' | 'warning' | 'danger'; label: string }
+  { variant: "success" | "warning" | "danger"; label: string }
 > = {
-  easy: { variant: 'success', label: 'Easy' },
-  medium: { variant: 'warning', label: 'Medium' },
-  hard: { variant: 'danger', label: 'Hard' },
+  easy: { variant: "success", label: "Easy" },
+  medium: { variant: "warning", label: "Medium" },
+  hard: { variant: "danger", label: "Hard" },
 };
 
 const weekVariants = {
@@ -62,7 +62,7 @@ function WeekItem({
       </div>
 
       {/* Content */}
-      <div className={`flex-1 pb-6 ${isLast ? 'pb-0' : ''}`}>
+      <div className={`flex-1 pb-6 ${isLast ? "pb-0" : ""}`}>
         <div className="rounded-xl bg-white/50 p-4">
           <div className="flex items-start justify-between gap-2">
             <h3 className="text-sm font-semibold text-stone-800">
@@ -95,7 +95,7 @@ function WeekItem({
 
 export default function RoadmapCard({
   roadmap,
-  className = '',
+  className = "",
 }: RoadmapCardProps) {
   return (
     <GlassCard
@@ -106,19 +106,14 @@ export default function RoadmapCard({
     >
       {/* Header */}
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-stone-700">
-          4-Week Roadmap
-        </h2>
-        <span className="text-xs font-medium text-stone-400">
+        <h2 className="text-lg font-semibold text-stone-700">4-Week Roadmap</h2>
+        <span className="text-xs font-medium text-stone-500">
           {roadmap.weeks.length} weeks
         </span>
       </div>
 
       {/* Timeline */}
-      <motion.div
-        initial="hidden"
-        animate="visible"
-      >
+      <motion.div initial="hidden" animate="visible">
         {roadmap.weeks.map((week, i) => (
           <WeekItem
             key={week.week}
@@ -140,7 +135,7 @@ export default function RoadmapCard({
           Estimated Total Reduction
         </p>
         <p className="mt-1 text-xl font-bold text-emerald-700">
-          {roadmap.totalEstimatedReduction.toLocaleString('en-US')} kg CO₂e
+          {roadmap.totalEstimatedReduction.toLocaleString("en-US")} kg CO₂e
         </p>
       </motion.div>
     </GlassCard>

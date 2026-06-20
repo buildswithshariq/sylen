@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { m as motion, AnimatePresence } from 'framer-motion';
-import type { Recommendation, Difficulty } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
-import Badge from '@/components/ui/Badge';
+import { useState } from "react";
+import { m as motion, AnimatePresence } from "framer-motion";
+import type { Recommendation, Difficulty } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
+import Badge from "@/components/ui/Badge";
 
 interface RecommendationListProps {
   recommendations: Recommendation[];
@@ -15,11 +15,11 @@ interface RecommendationListProps {
 
 const difficultyBadge: Record<
   Difficulty,
-  { variant: 'success' | 'warning' | 'danger'; label: string }
+  { variant: "success" | "warning" | "danger"; label: string }
 > = {
-  easy: { variant: 'success', label: 'Easy' },
-  medium: { variant: 'warning', label: 'Medium' },
-  hard: { variant: 'danger', label: 'Hard' },
+  easy: { variant: "success", label: "Easy" },
+  medium: { variant: "warning", label: "Medium" },
+  hard: { variant: "danger", label: "Hard" },
 };
 
 const listVariants = {
@@ -43,7 +43,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
   const diffConfig = difficultyBadge[rec.difficulty];
   const truncated =
     rec.description.length > 100
-      ? rec.description.slice(0, 100) + '…'
+      ? rec.description.slice(0, 100) + "…"
       : rec.description;
 
   return (
@@ -68,7 +68,10 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <motion.div layout="position" className="flex items-center justify-between gap-2">
+          <motion.div
+            layout="position"
+            className="flex items-center justify-between gap-2"
+          >
             <h3 className="text-sm font-semibold text-stone-800 truncate">
               {rec.title}
             </h3>
@@ -93,7 +96,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
                 layout
                 key="full"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.25 }}
                 className="mt-1.5 text-sm leading-relaxed text-stone-500"
@@ -105,10 +108,10 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
                 layout
                 key="truncated"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.15 }}
-                className="mt-1.5 text-sm leading-relaxed text-stone-400"
+                className="mt-1.5 text-sm leading-relaxed text-stone-500"
               >
                 {truncated}
               </motion.p>
@@ -123,7 +126,7 @@ function RecommendationItem({ rec }: { rec: Recommendation }) {
 export default function RecommendationList({
   recommendations,
   limit = 5,
-  className = '',
+  className = "",
 }: RecommendationListProps) {
   const sorted = [...recommendations]
     .sort((a, b) => a.priority - b.priority)
@@ -140,7 +143,7 @@ export default function RecommendationList({
         <h2 className="text-lg font-semibold text-stone-700">
           Top Recommendations
         </h2>
-        <span className="text-xs font-medium text-stone-400">
+        <span className="text-xs font-medium text-stone-500">
           {sorted.length} actions
         </span>
       </div>

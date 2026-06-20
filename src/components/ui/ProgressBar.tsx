@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
+import { m as motion } from "framer-motion";
 
-const STEP_LABELS = ['Transport', 'Energy', 'Food', 'Lifestyle'] as const;
+const STEP_LABELS = ["Transport", "Energy", "Food", "Lifestyle"] as const;
 
 interface ProgressBarProps {
   currentStep: number;
@@ -18,11 +18,7 @@ export default function ProgressBar({
   return (
     <div className="w-full">
       {/* Native progress element for accessibility */}
-      <progress
-        className="sr-only"
-        value={currentStep + 1}
-        max={totalSteps}
-      >
+      <progress className="sr-only" value={currentStep + 1} max={totalSteps}>
         Step {currentStep + 1} of {totalSteps}
       </progress>
 
@@ -32,7 +28,7 @@ export default function ProgressBar({
           <span
             key={label}
             className={`text-xs font-medium transition-colors sm:text-sm ${
-              i <= currentStep ? 'text-emerald-700' : 'text-gray-400'
+              i <= currentStep ? "text-emerald-700" : "text-gray-400"
             }`}
           >
             {label}
@@ -46,7 +42,7 @@ export default function ProgressBar({
           className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ type: 'spring', stiffness: 80, damping: 15 }}
+          transition={{ type: "spring", stiffness: 80, damping: 15 }}
         />
       </div>
 
@@ -57,8 +53,8 @@ export default function ProgressBar({
             key={label}
             className={`h-2.5 w-2.5 rounded-full border-2 transition-colors ${
               i <= currentStep
-                ? 'border-emerald-500 bg-emerald-500'
-                : 'border-gray-300 bg-white'
+                ? "border-emerald-500 bg-emerald-500"
+                : "border-gray-300 bg-white"
             }`}
           />
         ))}

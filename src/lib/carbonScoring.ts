@@ -9,13 +9,13 @@ import {
   EmissionCategory,
   ImpactCategory,
   SustainabilityScore,
-} from '@/types';
+} from "@/types";
 import {
   SCORE_THRESHOLDS,
   IMPACT_CATEGORIES,
   NATIONAL_AVERAGE_KG,
   CATEGORY_LABELS,
-} from './constants';
+} from "./constants";
 
 /**
  * Calculate a 0–100 sustainability score from total annual emissions.
@@ -50,17 +50,24 @@ function computeScore(totalEmissionsKg: number): number {
  * Determine impact category from score.
  */
 function getImpactCategory(score: number): ImpactCategory {
-  if (score >= 80) return 'excellent';
-  if (score >= 60) return 'good';
-  if (score >= 40) return 'moderate';
-  return 'high_impact';
+  if (score >= 80) return "excellent";
+  if (score >= 60) return "good";
+  if (score >= 40) return "moderate";
+  return "high_impact";
 }
 
 /**
  * Calculate per-category contribution percentages.
  */
-function computeContributions(breakdown: CarbonBreakdown): CategoryContribution[] {
-  const categories: EmissionCategory[] = ['transport', 'energy', 'food', 'lifestyle'];
+function computeContributions(
+  breakdown: CarbonBreakdown,
+): CategoryContribution[] {
+  const categories: EmissionCategory[] = [
+    "transport",
+    "energy",
+    "food",
+    "lifestyle",
+  ];
   const total = breakdown.total || 1; // prevent division by zero
 
   return categories
@@ -76,7 +83,9 @@ function computeContributions(breakdown: CarbonBreakdown): CategoryContribution[
 /**
  * Generate a complete sustainability score from a carbon breakdown.
  */
-export function generateSustainabilityScore(breakdown: CarbonBreakdown): SustainabilityScore {
+export function generateSustainabilityScore(
+  breakdown: CarbonBreakdown,
+): SustainabilityScore {
   const score = computeScore(breakdown.total);
   const category = getImpactCategory(score);
   const categoryInfo = IMPACT_CATEGORIES[category];
@@ -84,7 +93,7 @@ export function generateSustainabilityScore(breakdown: CarbonBreakdown): Sustain
 
   // How the user compares to national average (negative = better)
   const comparisonToAverage = Math.round(
-    ((breakdown.total - NATIONAL_AVERAGE_KG) / NATIONAL_AVERAGE_KG) * 100
+    ((breakdown.total - NATIONAL_AVERAGE_KG) / NATIONAL_AVERAGE_KG) * 100,
   );
 
   return {

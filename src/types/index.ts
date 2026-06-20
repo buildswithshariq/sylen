@@ -4,13 +4,18 @@
 
 // --- Assessment Data Types ---
 
-export type VehicleType = 'car' | 'public_transit' | 'motorbike' | 'bicycle' | 'walk';
-export type FuelType = 'gasoline' | 'diesel' | 'hybrid' | 'electric';
-export type DietType = 'vegan' | 'vegetarian' | 'mixed' | 'heavy_meat';
-export type FoodWasteLevel = 'minimal' | 'some' | 'significant';
-export type ApplianceUsage = 'low' | 'medium' | 'high';
-export type ShoppingFrequency = 'rarely' | 'monthly' | 'weekly';
-export type RecyclingHabit = 'always' | 'sometimes' | 'never';
+export type VehicleType =
+  | "car"
+  | "public_transit"
+  | "motorbike"
+  | "bicycle"
+  | "walk";
+export type FuelType = "gasoline" | "diesel" | "hybrid" | "electric";
+export type DietType = "vegan" | "vegetarian" | "mixed" | "heavy_meat";
+export type FoodWasteLevel = "minimal" | "some" | "significant";
+export type ApplianceUsage = "low" | "medium" | "high";
+export type ShoppingFrequency = "rarely" | "monthly" | "weekly";
+export type RecyclingHabit = "always" | "sometimes" | "never";
 
 export interface TransportData {
   vehicleType: VehicleType;
@@ -47,14 +52,14 @@ export interface AssessmentData {
 // --- Carbon Calculation Types ---
 
 export interface CarbonBreakdown {
-  transport: number;   // kg CO₂e per year
-  energy: number;      // kg CO₂e per year
-  food: number;        // kg CO₂e per year
-  lifestyle: number;   // kg CO₂e per year
-  total: number;       // kg CO₂e per year
+  transport: number; // kg CO₂e per year
+  energy: number; // kg CO₂e per year
+  food: number; // kg CO₂e per year
+  lifestyle: number; // kg CO₂e per year
+  total: number; // kg CO₂e per year
 }
 
-export type EmissionCategory = keyof Omit<CarbonBreakdown, 'total'>;
+export type EmissionCategory = keyof Omit<CarbonBreakdown, "total">;
 
 export interface CategoryContribution {
   category: EmissionCategory;
@@ -65,10 +70,10 @@ export interface CategoryContribution {
 
 // --- Scoring Types ---
 
-export type ImpactCategory = 'excellent' | 'good' | 'moderate' | 'high_impact';
+export type ImpactCategory = "excellent" | "good" | "moderate" | "high_impact";
 
 export interface SustainabilityScore {
-  score: number;           // 0–100
+  score: number; // 0–100
   category: ImpactCategory;
   categoryLabel: string;
   breakdown: CarbonBreakdown;
@@ -79,7 +84,7 @@ export interface SustainabilityScore {
 
 // --- Recommendation Types ---
 
-export type Difficulty = 'easy' | 'medium' | 'hard';
+export type Difficulty = "easy" | "medium" | "hard";
 
 export interface Recommendation {
   id: string;
@@ -88,8 +93,8 @@ export interface Recommendation {
   category: EmissionCategory;
   estimatedReductionKg: number;
   difficulty: Difficulty;
-  priority: number;         // 1 = highest
-  icon: string;             // emoji
+  priority: number; // 1 = highest
+  icon: string; // emoji
 }
 
 // --- Eco Level / Gamification Types ---
@@ -154,14 +159,14 @@ export interface WhatIfResult {
 
 // --- AI Coach Types ---
 
-export type CoachRole = 'user' | 'assistant';
+export type CoachRole = "user" | "assistant";
 
 export interface CoachMessage {
   id: string;
   role: CoachRole;
   content: string;
   timestamp: number;
-  uiCard?: 'priority' | 'breakdown' | 'transport';
+  uiCard?: "priority" | "breakdown" | "transport";
   isStreaming?: boolean;
 }
 

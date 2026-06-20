@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/Skeleton';
-import GlassCard from '@/components/ui/GlassCard';
+import { Skeleton } from "@/components/ui/Skeleton";
+import GlassCard from "@/components/ui/GlassCard";
 
 export default function AssessmentSkeleton() {
   return (
@@ -8,7 +8,6 @@ export default function AssessmentSkeleton() {
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-emerald-100/40 rounded-full blur-3xl z-0" />
 
       <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col flex-1">
-        
         {/* Header & Progress Skeleton */}
         <div className="mb-8 space-y-4">
           <Skeleton className="h-8 w-3/4 sm:w-1/2 rounded-lg" />
@@ -31,7 +30,7 @@ export default function AssessmentSkeleton() {
               <Skeleton className="h-7 w-1/2 rounded-md" />
               <Skeleton className="h-4 w-1/3 rounded-sm" />
             </div>
-            
+
             <div className="space-y-4">
               <Skeleton className="h-5 w-1/4 rounded-sm" />
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

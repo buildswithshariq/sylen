@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface AnimatedCounterProps {
   /** Target value to animate to */
@@ -24,10 +24,10 @@ function easeOutCubic(t: number): number {
 export default function AnimatedCounter({
   value,
   duration = 2000,
-  suffix = '',
-  prefix = '',
+  suffix = "",
+  prefix = "",
   decimals = 0,
-  className = '',
+  className = "",
 }: AnimatedCounterProps) {
   const [displayValue, setDisplayValue] = useState(0);
   const rafRef = useRef<number | null>(null);
@@ -64,7 +64,7 @@ export default function AnimatedCounter({
     };
   }, [animate]);
 
-  const formatted = displayValue.toLocaleString('en-US', {
+  const formatted = displayValue.toLocaleString("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });

@@ -9,21 +9,21 @@
   /* Primary — Forest Greens */
   --color-forest: #166534;
   --color-emerald: #059669;
-  --color-sage: #86EFAC;
+  --color-sage: #86efac;
 
   /* Secondary — Warm Neutrals */
-  --color-off-white: #FAFAF9;
-  --color-warm-white: #F5F5F4;
-  --color-soft-gray: #E7E5E4;
+  --color-off-white: #fafaf9;
+  --color-warm-white: #f5f5f4;
+  --color-soft-gray: #e7e5e4;
 
   /* Accent */
-  --color-sky: #0EA5E9;
-  --color-eco: #22C55E;
+  --color-sky: #0ea5e9;
+  --color-eco: #22c55e;
 
   /* Semantic */
   --color-background: var(--color-off-white);
-  --color-foreground: #1C1917;
-  --color-muted: #78716C;
+  --color-foreground: #1c1917;
+  --color-muted: #78716c;
 
   /* Font */
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
@@ -31,8 +31,8 @@
 
 /* Base */
 :root {
-  --background: #FAFAF9;
-  --foreground: #1C1917;
+  --background: #fafaf9;
+  --foreground: #1c1917;
 }
 
 body {
@@ -138,7 +138,7 @@ input[type="range"] {
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: #E7E5E4;
+  background: #e7e5e4;
   outline: none;
   transition: background 0.2s;
 }
@@ -152,7 +152,9 @@ input[type="range"]::-webkit-slider-thumb {
   background: #059669;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -175,19 +177,35 @@ input[type="range"]::-moz-range-thumb {
    ============================================================ */
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .animate-float {
@@ -208,7 +226,7 @@ input[type="range"]::-moz-range-thumb {
    ============================================================ */
 
 .text-gradient {
-  background: linear-gradient(135deg, #166534 0%, #059669 50%, #0EA5E9 100%);
+  background: linear-gradient(135deg, #166534 0%, #059669 50%, #0ea5e9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -226,6 +244,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .bg-dots {
-  background-image: radial-gradient(rgba(22, 101, 52, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(22, 101, 52, 0.08) 1px,
+    transparent 1px
+  );
   background-size: 24px 24px;
 }

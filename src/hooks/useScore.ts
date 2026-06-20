@@ -1,12 +1,18 @@
-'use client';
+"use client";
 
-import { useMemo, useEffect } from 'react';
-import { AssessmentData, SustainabilityScore, Recommendation, UserEcoLevel, Roadmap } from '@/types';
-import { calculateCarbonFootprint } from '@/lib/carbonCalculator';
-import { generateSustainabilityScore } from '@/lib/carbonScoring';
-import { generateRecommendations } from '@/lib/recommendationEngine';
-import { getUserEcoLevel } from '@/lib/ecoLevelEngine';
-import { generateRoadmap } from '@/lib/roadmapEngine';
+import { useMemo, useEffect } from "react";
+import {
+  AssessmentData,
+  SustainabilityScore,
+  Recommendation,
+  UserEcoLevel,
+  Roadmap,
+} from "@/types";
+import { calculateCarbonFootprint } from "@/lib/carbonCalculator";
+import { generateSustainabilityScore } from "@/lib/carbonScoring";
+import { generateRecommendations } from "@/lib/recommendationEngine";
+import { getUserEcoLevel } from "@/lib/ecoLevelEngine";
+import { generateRoadmap } from "@/lib/roadmapEngine";
 
 interface ScoreResults {
   score: SustainabilityScore;
@@ -20,7 +26,9 @@ interface ScoreResults {
  * Runs the entire deterministic carbon intelligence pipeline.
  * Caches key metrics in localStorage for the Sprout companion.
  */
-export function useScore(assessmentData: AssessmentData | null): ScoreResults | null {
+export function useScore(
+  assessmentData: AssessmentData | null,
+): ScoreResults | null {
   const results = useMemo(() => {
     if (!assessmentData) return null;
 
@@ -44,16 +52,16 @@ export function useScore(assessmentData: AssessmentData | null): ScoreResults | 
     if (results) {
       const totalReduction = results.recommendations.reduce(
         (sum, r) => sum + r.estimatedReductionKg,
-        0
+        0,
       );
       try {
         localStorage.setItem(
-          'eco-score-cache',
+          "eco-score-cache",
           JSON.stringify({
             score: results.score.score,
             ecoLevelName: results.ecoLevel.current.name,
             totalReduction,
-          })
+          }),
         );
       } catch {
         // localStorage may be unavailable
@@ -63,4 +71,3 @@ export function useScore(assessmentData: AssessmentData | null): ScoreResults | 
 
   return results;
 }
-

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import TransitionLink from '@/components/ui/TransitionLink';
-import { usePathname, useRouter } from 'next/navigation';
-import { m as motion, AnimatePresence } from 'framer-motion';
-import { useAssessment } from '@/hooks/useAssessment';
+import { useState, useEffect } from "react";
+import TransitionLink from "@/components/ui/TransitionLink";
+import { usePathname, useRouter } from "next/navigation";
+import { m as motion, AnimatePresence } from "framer-motion";
+import { useAssessment } from "@/hooks/useAssessment";
 
 const navLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Resources', href: '/resources' },
+  { name: "Home", href: "/" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Resources", href: "/resources" },
 ];
 
 export default function Navbar() {
@@ -23,8 +23,8 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close mobile menu when path changes
@@ -33,27 +33,33 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const ctaText = isLoaded ? (isComplete ? 'Retake Assessment' : 'Take Assessment') : 'Take Assessment';
-  const ctaHref = '/assessment';
+  const ctaText = isLoaded
+    ? isComplete
+      ? "Retake Assessment"
+      : "Take Assessment"
+    : "Take Assessment";
+  const ctaHref = "/assessment";
 
   const handleReAssessmentClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('sylen-assessment');
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("sylen-assessment");
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
           if (parsed.isComplete) {
             e.preventDefault();
             const confirmRetake = window.confirm(
-              "Are you sure you want to take a re-assessment? This will remove your previous record."
+              "Are you sure you want to take a re-assessment? This will remove your previous record.",
             );
             if (confirmRetake) {
-              localStorage.removeItem('sylen-assessment');
-              localStorage.removeItem('eco-score-cache');
+              localStorage.removeItem("sylen-assessment");
+              localStorage.removeItem("eco-score-cache");
               if (document.startViewTransition) {
-                document.startViewTransition(() => router.push('/assessment?retake=true'));
+                document.startViewTransition(() =>
+                  router.push("/assessment?retake=true"),
+                );
               } else {
-                router.push('/assessment?retake=true');
+                router.push("/assessment?retake=true");
               }
             }
           }
@@ -68,15 +74,22 @@ export default function Navbar() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white/80 backdrop-blur-xl border-b border-stone-200/50 shadow-sm' : 'bg-transparent'
+          scrolled
+            ? "bg-white/80 backdrop-blur-xl border-b border-stone-200/50 shadow-sm"
+            : "bg-transparent"
         }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <TransitionLink href="/" className="flex items-center gap-2 group">
-                <span className="text-2xl transition-transform group-hover:scale-110">🌱</span>
+              <TransitionLink
+                href="/"
+                className="flex items-center gap-2 group"
+              >
+                <span className="text-2xl transition-transform group-hover:scale-110">
+                  🌱
+                </span>
                 <span className="font-semibold text-xl tracking-tight text-stone-800">
                   Sy<span className="text-emerald-600">len</span>
                 </span>
@@ -92,14 +105,16 @@ export default function Navbar() {
                     key={link.name}
                     href={link.href}
                     className={`text-sm font-medium transition-colors ${
-                      isActive ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
+                      isActive
+                        ? "text-emerald-600"
+                        : "text-stone-600 hover:text-emerald-600"
                     }`}
                   >
                     {link.name}
                   </TransitionLink>
                 );
               })}
-              
+
               <TransitionLink
                 href={ctaHref}
                 onClick={handleReAssessmentClick}
@@ -120,12 +135,34 @@ export default function Navbar() {
               >
                 <span className="sr-only">Open main menu</span>
                 {!isMobileMenuOpen ? (
-                  <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <svg
+                    aria-hidden="true"
+                    className="block h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 ) : (
-                  <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    aria-hidden="true"
+                    className="block h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 )}
               </button>
@@ -154,8 +191,8 @@ export default function Navbar() {
                       href={link.href}
                       className={`block px-3 py-2 rounded-lg text-base font-medium ${
                         isActive
-                          ? 'bg-emerald-50 text-emerald-600'
-                          : 'text-stone-700 hover:bg-stone-50 hover:text-emerald-600'
+                          ? "bg-emerald-50 text-emerald-600"
+                          : "text-stone-700 hover:bg-stone-50 hover:text-emerald-600"
                       }`}
                     >
                       {link.name}

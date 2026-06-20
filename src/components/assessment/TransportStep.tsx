@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { TransportData, VehicleType, FuelType } from '@/types';
+import { m as motion } from "framer-motion";
+import type { TransportData, VehicleType, FuelType } from "@/types";
 
 interface TransportStepProps {
   data: Partial<TransportData>;
@@ -9,23 +9,23 @@ interface TransportStepProps {
 }
 
 const VEHICLES: { value: VehicleType; label: string; icon: string }[] = [
-  { value: 'car', label: 'Car', icon: '🚗' },
-  { value: 'public_transit', label: 'Public Transit', icon: '🚇' },
-  { value: 'motorbike', label: 'Motorbike', icon: '🏍️' },
-  { value: 'bicycle', label: 'Bicycle', icon: '🚴' },
-  { value: 'walk', label: 'Walk', icon: '🚶' },
+  { value: "car", label: "Car", icon: "🚗" },
+  { value: "public_transit", label: "Public Transit", icon: "🚇" },
+  { value: "motorbike", label: "Motorbike", icon: "🏍️" },
+  { value: "bicycle", label: "Bicycle", icon: "🚴" },
+  { value: "walk", label: "Walk", icon: "🚶" },
 ];
 
 const FUELS: { value: FuelType; label: string }[] = [
-  { value: 'gasoline', label: 'Gasoline' },
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'hybrid', label: 'Hybrid' },
-  { value: 'electric', label: 'Electric' },
+  { value: "gasoline", label: "Gasoline" },
+  { value: "diesel", label: "Diesel" },
+  { value: "hybrid", label: "Hybrid" },
+  { value: "electric", label: "Electric" },
 ];
 
 const defaults: TransportData = {
-  vehicleType: 'car',
-  fuelType: 'gasoline',
+  vehicleType: "car",
+  fuelType: "gasoline",
   dailyDistanceKm: 20,
 };
 
@@ -57,7 +57,11 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Primary mode of transport
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="radiogroup" aria-label="Primary mode of transport">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+          role="radiogroup"
+          aria-label="Primary mode of transport"
+        >
           {VEHICLES.map(({ value, label, icon }) => {
             const selected = current.vehicleType === value;
             return (
@@ -68,8 +72,8 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
                 onClick={() => update({ vehicleType: value })}
                 className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}
@@ -85,17 +89,21 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
       </fieldset>
 
       {/* Fuel type (car only) */}
-      {current.vehicleType === 'car' && (
+      {current.vehicleType === "car" && (
         <motion.fieldset
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
+          animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.25 }}
         >
           <legend className="mb-3 text-sm font-medium text-gray-700">
             Fuel type
           </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" role="radiogroup" aria-label="Fuel type">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+            role="radiogroup"
+            aria-label="Fuel type"
+          >
             {FUELS.map(({ value, label }) => {
               const selected = current.fuelType === value;
               return (
@@ -106,8 +114,8 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
                   onClick={() => update({ fuelType: value })}
                   className={`rounded-lg border-2 px-3 py-2 text-sm font-medium transition-colors min-h-[56px] flex items-center justify-center ${
                     selected
-                      ? 'border-emerald-500 bg-emerald-50/80 text-emerald-700'
-                      : 'border-transparent bg-white/40 text-gray-600 hover:bg-emerald-50/60'
+                      ? "border-emerald-500 bg-emerald-50/80 text-emerald-700"
+                      : "border-transparent bg-white/40 text-gray-600 hover:bg-emerald-50/60"
                   }`}
                   role="radio"
                   aria-checked={selected}
@@ -141,9 +149,7 @@ export default function TransportStep({ data, onChange }: TransportStepProps) {
           step={1}
           aria-label="Daily commute distance"
           value={current.dailyDistanceKm}
-          onChange={(e) =>
-            update({ dailyDistanceKm: Number(e.target.value) })
-          }
+          onChange={(e) => update({ dailyDistanceKm: Number(e.target.value) })}
           className="w-full accent-emerald-600"
         />
         <div className="mt-1 flex justify-between text-xs text-gray-400">

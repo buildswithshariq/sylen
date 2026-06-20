@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react';
+import { type ReactNode } from "react";
 
-type BadgeVariant = 'success' | 'warning' | 'danger' | 'info';
+type BadgeVariant = "success" | "warning" | "danger" | "info";
 
 interface BadgeProps {
   /** Badge label text */
@@ -10,29 +10,29 @@ interface BadgeProps {
   /** Optional leading icon (emoji or ReactNode) */
   icon?: ReactNode;
   /** Size variant */
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
   /** Extra Tailwind classes */
   className?: string;
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  success: 'bg-green-100 text-green-800 border-green-200/60',
-  warning: 'bg-amber-100 text-amber-800 border-amber-200/60',
-  danger: 'bg-red-100 text-red-800 border-red-200/60',
-  info: 'bg-sky-100 text-sky-800 border-sky-200/60',
+  success: "bg-green-100 text-green-800 border-green-200/60",
+  warning: "bg-amber-100 text-amber-800 border-amber-200/60",
+  danger: "bg-red-100 text-red-800 border-red-200/60",
+  info: "bg-sky-100 text-sky-800 border-sky-200/60",
 };
 
-const sizeStyles: Record<NonNullable<BadgeProps['size']>, string> = {
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-3 py-1 text-sm',
+const sizeStyles: Record<NonNullable<BadgeProps["size"]>, string> = {
+  sm: "px-2 py-0.5 text-xs",
+  md: "px-3 py-1 text-sm",
 };
 
 export default function Badge({
   text,
-  variant = 'success',
+  variant = "success",
   icon,
-  size = 'md',
-  className = '',
+  size = "md",
+  className = "",
 }: BadgeProps) {
   return (
     <span

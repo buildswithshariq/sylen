@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useRef } from 'react';
-import { CoachContext, CoachMessage, CoachRole } from '@/types';
-import { generateInitialGreeting } from '@/lib/coachEngine';
+import { useState, useCallback, useRef } from "react";
+import { CoachContext, CoachMessage, CoachRole } from "@/types";
+import { generateInitialGreeting } from "@/lib/coachEngine";
 
 /**
  * Simulates a typewriter streaming effect for a message.
@@ -11,7 +11,7 @@ import { generateInitialGreeting } from '@/lib/coachEngine';
 function simulateStream(
   content: string,
   msgId: string,
-  setMessages: React.Dispatch<React.SetStateAction<CoachMessage[]>>
+  setMessages: React.Dispatch<React.SetStateAction<CoachMessage[]>>,
 ) {
   let i = 0;
   const streamInterval = setInterval(() => {
@@ -23,8 +23,8 @@ function simulateStream(
       prev.map((m) =>
         m.id === msgId
           ? { ...m, content: slicedContent, isStreaming: !finished }
-          : m
-      )
+          : m,
+      ),
     );
 
     if (finished) {
@@ -36,16 +36,30 @@ function simulateStream(
 /**
  * Determines which generative UI card to attach based on response content.
  */
-function detectUiCard(content: string): 'priority' | 'breakdown' | 'transport' | undefined {
+function detectUiCard(
+  content: string,
+): "priority" | "breakdown" | "transport" | undefined {
   const lower = content.toLowerCase();
-  if (lower.includes('improve') || lower.includes('recommendation') || lower.includes('action')) {
-    return 'priority';
+  if (
+    lower.includes("improve") ||
+    lower.includes("recommendation") ||
+    lower.includes("action")
+  ) {
+    return "priority";
   }
-  if (lower.includes('breakdown') || lower.includes('source') || lower.includes('explain')) {
-    return 'breakdown';
+  if (
+    lower.includes("breakdown") ||
+    lower.includes("source") ||
+    lower.includes("explain")
+  ) {
+    return "breakdown";
   }
-  if (lower.includes('transport') || lower.includes('drive') || lower.includes('fly')) {
-    return 'transport';
+  if (
+    lower.includes("transport") ||
+    lower.includes("drive") ||
+    lower.includes("fly")
+  ) {
+    return "transport";
   }
   return undefined;
 }
@@ -68,8 +82,8 @@ export function useCoach(context: CoachContext | null) {
     const greeting = generateInitialGreeting(context);
     const greetingMessage: CoachMessage = {
       id: `msg-${Date.now()}`,
-      role: 'assistant',
-      content: '',
+      role: "assistant",
+      content: "",
       timestamp: Date.now(),
       isStreaming: true,
     };
@@ -86,7 +100,7 @@ export function useCoach(context: CoachContext | null) {
 
       const userMsg: CoachMessage = {
         id: `msg-${Date.now()}`,
-        role: 'user',
+        role: "user",
         content: userMessage.trim(),
         timestamp: Date.now(),
       };
@@ -97,9 +111,9 @@ export function useCoach(context: CoachContext | null) {
       try {
         const recentHistory = messages.slice(-5);
 
-        const response = await fetch('/api/coach', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/coach", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message: userMessage.trim(),
             context,
@@ -108,18 +122,18 @@ export function useCoach(context: CoachContext | null) {
         });
 
         if (!response.ok || !response.body) {
-          throw new Error('Failed to get response from coach');
+          throw new Error("Failed to get response from coach");
         }
 
         const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let fullContent = '';
+        const decoder = new TextDecoder("utf-8");
+        let fullContent = "";
 
         const msgId = `msg-${Date.now() + 1}`;
         const assistantMsg: CoachMessage = {
           id: msgId,
-          role: 'assistant',
-          content: '',
+          role: "assistant",
+          content: "",
           timestamp: Date.now(),
           isStreaming: true,
         };
@@ -136,24 +150,22 @@ export function useCoach(context: CoachContext | null) {
 
           setMessages((prev) =>
             prev.map((m) =>
-              m.id === msgId ? { ...m, content: fullContent, uiCard } : m
-            )
+              m.id === msgId ? { ...m, content: fullContent, uiCard } : m,
+            ),
           );
         }
 
         // Finish streaming
         setMessages((prev) =>
-          prev.map((m) =>
-            m.id === msgId ? { ...m, isStreaming: false } : m
-          )
+          prev.map((m) => (m.id === msgId ? { ...m, isStreaming: false } : m)),
         );
       } catch (err) {
-        setError('Failed to get a response. Please try again.');
-        console.error('Coach error:', err);
+        setError("Failed to get a response. Please try again.");
+        console.error("Coach error:", err);
         setIsLoading(false);
       }
     },
-    [context, isLoading, messages]
+    [context, isLoading, messages],
   );
 
   // Clear conversation
@@ -165,18 +177,18 @@ export function useCoach(context: CoachContext | null) {
 
   // Push a message directly
   const pushMessage = useCallback(
-    (content: string, role: CoachRole = 'assistant') => {
+    (content: string, role: CoachRole = "assistant") => {
       const newMsg: CoachMessage = {
         id: `msg-${Date.now()}`,
         role,
-        content: '',
+        content: "",
         timestamp: Date.now(),
         isStreaming: true,
       };
       setMessages((prev) => [...prev, newMsg]);
       simulateStream(content, newMsg.id, setMessages);
     },
-    []
+    [],
   );
 
   return {

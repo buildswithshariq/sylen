@@ -3,7 +3,7 @@
 // Sources: EPA GHG Emission Factors Hub, UK DEFRA 2023
 // ============================================================
 
-import { EcoLevel, ImpactCategory } from '@/types';
+import { EcoLevel, ImpactCategory } from "@/types";
 
 // --- Transport Emission Factors (kg CO₂e per km) ---
 
@@ -95,28 +95,71 @@ export const SCORE_THRESHOLDS: { maxEmissions: number; score: number }[] = [
 
 // --- Impact Categories ---
 
-export const IMPACT_CATEGORIES: Record<ImpactCategory, { label: string; minScore: number; maxScore: number; color: string }> = {
-  excellent: { label: 'Excellent', minScore: 80, maxScore: 100, color: '#16a34a' },
-  good: { label: 'Good', minScore: 60, maxScore: 79, color: '#65a30d' },
-  moderate: { label: 'Moderate', minScore: 40, maxScore: 59, color: '#ca8a04' },
-  high_impact: { label: 'High Impact', minScore: 0, maxScore: 39, color: '#dc2626' },
+export const IMPACT_CATEGORIES: Record<
+  ImpactCategory,
+  { label: string; minScore: number; maxScore: number; color: string }
+> = {
+  excellent: {
+    label: "Excellent",
+    minScore: 80,
+    maxScore: 100,
+    color: "#16a34a",
+  },
+  good: { label: "Good", minScore: 60, maxScore: 79, color: "#65a30d" },
+  moderate: { label: "Moderate", minScore: 40, maxScore: 59, color: "#ca8a04" },
+  high_impact: {
+    label: "High Impact",
+    minScore: 0,
+    maxScore: 39,
+    color: "#dc2626",
+  },
 };
 
 // --- Eco Levels ---
 
 export const ECO_LEVELS: EcoLevel[] = [
-  { name: 'Earth Guardian', badge: '🌍', minScore: 90, maxScore: 100, color: '#16a34a' },
-  { name: 'Climate Champion', badge: '🌱', minScore: 75, maxScore: 89, color: '#22c55e' },
-  { name: 'Green Explorer', badge: '🍃', minScore: 60, maxScore: 74, color: '#65a30d' },
-  { name: 'Eco Learner', badge: '🌿', minScore: 40, maxScore: 59, color: '#ca8a04' },
-  { name: 'High Impact', badge: '⚠️', minScore: 0, maxScore: 39, color: '#dc2626' },
+  {
+    name: "Earth Guardian",
+    badge: "🌍",
+    minScore: 90,
+    maxScore: 100,
+    color: "#16a34a",
+  },
+  {
+    name: "Climate Champion",
+    badge: "🌱",
+    minScore: 75,
+    maxScore: 89,
+    color: "#22c55e",
+  },
+  {
+    name: "Green Explorer",
+    badge: "🍃",
+    minScore: 60,
+    maxScore: 74,
+    color: "#65a30d",
+  },
+  {
+    name: "Eco Learner",
+    badge: "🌿",
+    minScore: 40,
+    maxScore: 59,
+    color: "#ca8a04",
+  },
+  {
+    name: "High Impact",
+    badge: "⚠️",
+    minScore: 0,
+    maxScore: 39,
+    color: "#dc2626",
+  },
 ];
 
 // --- Category Labels ---
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  transport: 'Transportation',
-  energy: 'Home Energy',
-  food: 'Food & Diet',
-  lifestyle: 'Lifestyle',
+  transport: "Transportation",
+  energy: "Home Energy",
+  food: "Food & Diet",
+  lifestyle: "Lifestyle",
 };

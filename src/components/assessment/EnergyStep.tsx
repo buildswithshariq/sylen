@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { EnergyData, ApplianceUsage } from '@/types';
+import { m as motion } from "framer-motion";
+import type { EnergyData, ApplianceUsage } from "@/types";
 
 interface EnergyStepProps {
   data: Partial<EnergyData>;
@@ -13,15 +13,15 @@ const APPLIANCE_OPTIONS: {
   label: string;
   description: string;
 }[] = [
-  { value: 'low', label: 'Low', description: 'Minimal electronics' },
-  { value: 'medium', label: 'Medium', description: 'Typical household' },
-  { value: 'high', label: 'High', description: 'Many devices' },
+  { value: "low", label: "Low", description: "Minimal electronics" },
+  { value: "medium", label: "Medium", description: "Typical household" },
+  { value: "high", label: "High", description: "Many devices" },
 ];
 
 const defaults: EnergyData = {
   monthlyElectricityKwh: 300,
   acHoursPerDay: 4,
-  applianceUsage: 'medium',
+  applianceUsage: "medium",
 };
 
 function merged(data: Partial<EnergyData>): EnergyData {
@@ -97,9 +97,7 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
           step={1}
           aria-label="Air conditioning hours per day"
           value={current.acHoursPerDay}
-          onChange={(e) =>
-            update({ acHoursPerDay: Number(e.target.value) })
-          }
+          onChange={(e) => update({ acHoursPerDay: Number(e.target.value) })}
           className="w-full accent-emerald-600"
         />
         <div className="mt-1 flex justify-between text-xs text-gray-400">
@@ -113,7 +111,11 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Appliance usage level
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Appliance usage level">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+          role="radiogroup"
+          aria-label="Appliance usage level"
+        >
           {APPLIANCE_OPTIONS.map(({ value, label, description }) => {
             const selected = current.applianceUsage === value;
             return (
@@ -124,8 +126,8 @@ export default function EnergyStep({ data, onChange }: EnergyStepProps) {
                 onClick={() => update({ applianceUsage: value })}
                 className={`flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}

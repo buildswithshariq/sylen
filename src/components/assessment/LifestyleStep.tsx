@@ -1,11 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type {
-  LifestyleData,
-  ShoppingFrequency,
-  RecyclingHabit,
-} from '@/types';
+import { m as motion } from "framer-motion";
+import type { LifestyleData, ShoppingFrequency, RecyclingHabit } from "@/types";
 
 interface LifestyleStepProps {
   data: Partial<LifestyleData>;
@@ -17,9 +13,9 @@ const SHOPPING_OPTIONS: {
   label: string;
   description: string;
 }[] = [
-  { value: 'rarely', label: 'Rarely', description: 'A few times a year' },
-  { value: 'monthly', label: 'Monthly', description: 'Once or twice a month' },
-  { value: 'weekly', label: 'Weekly', description: 'Most weeks' },
+  { value: "rarely", label: "Rarely", description: "A few times a year" },
+  { value: "monthly", label: "Monthly", description: "Once or twice a month" },
+  { value: "weekly", label: "Weekly", description: "Most weeks" },
 ];
 
 const RECYCLING_OPTIONS: {
@@ -27,26 +23,23 @@ const RECYCLING_OPTIONS: {
   label: string;
   icon: string;
 }[] = [
-  { value: 'always', label: 'Always', icon: '♻️' },
-  { value: 'sometimes', label: 'Sometimes', icon: '🔄' },
-  { value: 'never', label: 'Never', icon: '🗑️' },
+  { value: "always", label: "Always", icon: "♻️" },
+  { value: "sometimes", label: "Sometimes", icon: "🔄" },
+  { value: "never", label: "Never", icon: "🗑️" },
 ];
 
 const defaults: LifestyleData = {
   flightsPerYear: 2,
-  shoppingFrequency: 'monthly',
-  recyclingHabit: 'sometimes',
-  displayName: '',
+  shoppingFrequency: "monthly",
+  recyclingHabit: "sometimes",
+  displayName: "",
 };
 
 function merged(data: Partial<LifestyleData>): LifestyleData {
   return { ...defaults, ...data };
 }
 
-export default function LifestyleStep({
-  data,
-  onChange,
-}: LifestyleStepProps) {
+export default function LifestyleStep({ data, onChange }: LifestyleStepProps) {
   const current = merged(data);
 
   function update(patch: Partial<LifestyleData>) {
@@ -86,9 +79,7 @@ export default function LifestyleStep({
           step={1}
           aria-label="Flights per year"
           value={current.flightsPerYear}
-          onChange={(e) =>
-            update({ flightsPerYear: Number(e.target.value) })
-          }
+          onChange={(e) => update({ flightsPerYear: Number(e.target.value) })}
           className="w-full accent-emerald-600"
         />
         <div className="mt-1 flex justify-between text-xs text-gray-400">
@@ -102,7 +93,11 @@ export default function LifestyleStep({
         <legend className="mb-3 text-sm font-medium text-gray-700">
           How often do you shop for non-essentials?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="How often do you shop for non-essentials?">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+          role="radiogroup"
+          aria-label="How often do you shop for non-essentials?"
+        >
           {SHOPPING_OPTIONS.map(({ value, label, description }) => {
             const selected = current.shoppingFrequency === value;
             return (
@@ -113,8 +108,8 @@ export default function LifestyleStep({
                 onClick={() => update({ shoppingFrequency: value })}
                 className={`flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}
@@ -134,7 +129,11 @@ export default function LifestyleStep({
         <legend className="mb-3 text-sm font-medium text-gray-700">
           Do you recycle?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="Do you recycle?">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+          role="radiogroup"
+          aria-label="Do you recycle?"
+        >
           {RECYCLING_OPTIONS.map(({ value, label, icon }) => {
             const selected = current.recyclingHabit === value;
             return (
@@ -145,8 +144,8 @@ export default function LifestyleStep({
                 onClick={() => update({ recyclingHabit: value })}
                 className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}
@@ -163,7 +162,10 @@ export default function LifestyleStep({
 
       {/* Display Name */}
       <fieldset className="pt-4 border-t border-gray-100">
-        <label htmlFor="displayName" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="displayName"
+          className="block text-sm font-medium text-gray-700"
+        >
           What should we call you?
         </label>
         <p className="mb-3 text-xs text-gray-500">
@@ -173,10 +175,12 @@ export default function LifestyleStep({
           id="displayName"
           type="text"
           placeholder="Alex"
-          value={current.displayName || ''}
+          value={current.displayName || ""}
           onChange={(e) => {
             // Sanitize: allow only alphanumeric and spaces, max 20 chars
-            const sanitized = e.target.value.replace(/[^a-zA-Z0-9 ]/g, '').slice(0, 20);
+            const sanitized = e.target.value
+              .replace(/[^a-zA-Z0-9 ]/g, "")
+              .slice(0, 20);
             update({ displayName: sanitized });
           }}
           className="w-full rounded-xl border-2 border-transparent bg-white/60 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white focus:outline-none transition-colors"

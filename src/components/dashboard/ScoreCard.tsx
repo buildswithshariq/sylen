@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { SustainabilityScore, ImpactCategory } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
-import ScoreRing from '@/components/ui/ScoreRing';
-import Badge from '@/components/ui/Badge';
-import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import { m as motion } from "framer-motion";
+import type { SustainabilityScore, ImpactCategory } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
+import ScoreRing from "@/components/ui/ScoreRing";
+import Badge from "@/components/ui/Badge";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 
 interface ScoreCardProps {
   score: SustainabilityScore;
@@ -14,15 +14,15 @@ interface ScoreCardProps {
 
 const categoryBadgeConfig: Record<
   ImpactCategory,
-  { variant: 'success' | 'warning' | 'danger' | 'info'; icon: string }
+  { variant: "success" | "warning" | "danger" | "info"; icon: string }
 > = {
-  excellent: { variant: 'success', icon: '🌍' },
-  good: { variant: 'info', icon: '🌱' },
-  moderate: { variant: 'warning', icon: '🌿' },
-  high_impact: { variant: 'danger', icon: '⚠️' },
+  excellent: { variant: "success", icon: "🌍" },
+  good: { variant: "info", icon: "🌱" },
+  moderate: { variant: "warning", icon: "🌿" },
+  high_impact: { variant: "danger", icon: "⚠️" },
 };
 
-export default function ScoreCard({ score, className = '' }: ScoreCardProps) {
+export default function ScoreCard({ score, className = "" }: ScoreCardProps) {
   const badgeConfig = categoryBadgeConfig[score.category];
   const betterThanAvg = score.comparisonToAverage < 0;
   const comparisonAbs = Math.abs(score.comparisonToAverage);
@@ -36,10 +36,8 @@ export default function ScoreCard({ score, className = '' }: ScoreCardProps) {
     >
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-lg font-semibold text-stone-700">
-          Your Eco Score
-        </h2>
-        <p className="mt-0.5 text-sm text-stone-400">
+        <h2 className="text-lg font-semibold text-stone-700">Your Eco Score</h2>
+        <p className="mt-0.5 text-sm text-stone-500">
           Based on your lifestyle assessment
         </p>
       </div>
@@ -82,7 +80,7 @@ export default function ScoreCard({ score, className = '' }: ScoreCardProps) {
                   suffix="%"
                   decimals={0}
                 />
-              </span>{' '}
+              </span>{" "}
               lower than the national average
             </>
           ) : (
@@ -94,13 +92,13 @@ export default function ScoreCard({ score, className = '' }: ScoreCardProps) {
                   suffix="%"
                   decimals={0}
                 />
-              </span>{' '}
+              </span>{" "}
               higher than the national average
             </>
           )}
         </p>
-        <p className="mt-1 text-xs text-stone-400">
-          Total:{' '}
+        <p className="mt-1 text-xs text-stone-500">
+          Total:{" "}
           <AnimatedCounter
             value={score.totalEmissions}
             duration={2000}

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { FoodData, DietType, FoodWasteLevel } from '@/types';
+import { m as motion } from "framer-motion";
+import type { FoodData, DietType, FoodWasteLevel } from "@/types";
 
 interface FoodStepProps {
   data: Partial<FoodData>;
@@ -9,10 +9,10 @@ interface FoodStepProps {
 }
 
 const DIETS: { value: DietType; label: string; icon: string }[] = [
-  { value: 'vegan', label: 'Vegan', icon: '🌱' },
-  { value: 'vegetarian', label: 'Vegetarian', icon: '🥗' },
-  { value: 'mixed', label: 'Mixed', icon: '🍽️' },
-  { value: 'heavy_meat', label: 'Heavy Meat', icon: '🥩' },
+  { value: "vegan", label: "Vegan", icon: "🌱" },
+  { value: "vegetarian", label: "Vegetarian", icon: "🥗" },
+  { value: "mixed", label: "Mixed", icon: "🍽️" },
+  { value: "heavy_meat", label: "Heavy Meat", icon: "🥩" },
 ];
 
 const WASTE_LEVELS: {
@@ -20,19 +20,19 @@ const WASTE_LEVELS: {
   label: string;
   description: string;
 }[] = [
-  { value: 'minimal', label: 'Minimal', description: 'Almost none' },
-  { value: 'some', label: 'Some', description: 'Occasional waste' },
+  { value: "minimal", label: "Minimal", description: "Almost none" },
+  { value: "some", label: "Some", description: "Occasional waste" },
   {
-    value: 'significant',
-    label: 'Significant',
-    description: 'Frequent waste',
+    value: "significant",
+    label: "Significant",
+    description: "Frequent waste",
   },
 ];
 
 const defaults: FoodData = {
-  dietType: 'mixed',
+  dietType: "mixed",
   meatMealsPerWeek: 5,
-  foodWaste: 'some',
+  foodWaste: "some",
 };
 
 function merged(data: Partial<FoodData>): FoodData {
@@ -63,7 +63,11 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           What best describes your diet?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="radiogroup" aria-label="What best describes your diet?">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+          role="radiogroup"
+          aria-label="What best describes your diet?"
+        >
           {DIETS.map(({ value, label, icon }) => {
             const selected = current.dietType === value;
             return (
@@ -74,8 +78,8 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
                 onClick={() => update({ dietType: value })}
                 className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}
@@ -111,9 +115,7 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
           step={1}
           aria-label="Meat meals per week"
           value={current.meatMealsPerWeek}
-          onChange={(e) =>
-            update({ meatMealsPerWeek: Number(e.target.value) })
-          }
+          onChange={(e) => update({ meatMealsPerWeek: Number(e.target.value) })}
           className="w-full accent-emerald-600"
         />
         <div className="mt-1 flex justify-between text-xs text-gray-400">
@@ -127,7 +129,11 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
         <legend className="mb-3 text-sm font-medium text-gray-700">
           How much food do you waste?
         </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" role="radiogroup" aria-label="How much food do you waste?">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+          role="radiogroup"
+          aria-label="How much food do you waste?"
+        >
           {WASTE_LEVELS.map(({ value, label, description }) => {
             const selected = current.foodWaste === value;
             return (
@@ -138,8 +144,8 @@ export default function FoodStep({ data, onChange }: FoodStepProps) {
                 onClick={() => update({ foodWaste: value })}
                 className={`flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-4 min-h-[56px] transition-colors ${
                   selected
-                    ? 'border-emerald-500 bg-emerald-50/80'
-                    : 'border-transparent bg-white/40 hover:bg-emerald-50/60'
+                    ? "border-emerald-500 bg-emerald-50/80"
+                    : "border-transparent bg-white/40 hover:bg-emerald-50/60"
                 }`}
                 role="radio"
                 aria-checked={selected}

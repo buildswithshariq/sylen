@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import { m as motion } from "framer-motion";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 
 interface ScoreRingProps {
   /** Score value 0–100 */
@@ -17,17 +17,17 @@ interface ScoreRingProps {
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return '#16a34a'; // green-700
-  if (score >= 60) return '#65a30d'; // lime-600
-  if (score >= 40) return '#ca8a04'; // yellow-600
-  return '#dc2626'; // red-600
+  if (score >= 80) return "#16a34a"; // green-700
+  if (score >= 60) return "#65a30d"; // lime-600
+  if (score >= 40) return "#ca8a04"; // yellow-600
+  return "#dc2626"; // red-600
 }
 
 function getScoreTrackColor(score: number): string {
-  if (score >= 80) return 'rgba(22, 163, 74, 0.12)';
-  if (score >= 60) return 'rgba(101, 163, 13, 0.12)';
-  if (score >= 40) return 'rgba(202, 138, 4, 0.12)';
-  return 'rgba(220, 38, 38, 0.12)';
+  if (score >= 80) return "rgba(22, 163, 74, 0.12)";
+  if (score >= 60) return "rgba(101, 163, 13, 0.12)";
+  if (score >= 40) return "rgba(202, 138, 4, 0.12)";
+  return "rgba(220, 38, 38, 0.12)";
 }
 
 export default function ScoreRing({
@@ -35,7 +35,7 @@ export default function ScoreRing({
   size = 200,
   strokeWidth = 12,
   label,
-  className = '',
+  className = "",
 }: ScoreRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -48,7 +48,7 @@ export default function ScoreRing({
     <div
       className={`flex flex-col items-center gap-2 ${className}`}
       role="img"
-      aria-label={`Sustainability score: ${clampedScore} out of 100${label ? `, ${label}` : ''}`}
+      aria-label={`Sustainability score: ${clampedScore} out of 100${label ? `, ${label}` : ""}`}
     >
       <div className="relative" style={{ width: size, height: size }}>
         <svg
@@ -94,17 +94,14 @@ export default function ScoreRing({
             duration={2000}
             className="text-4xl font-bold tracking-tight text-stone-800"
           />
-          <span className="mt-0.5 text-xs font-medium tracking-wider text-stone-400 uppercase">
+          <span className="mt-0.5 text-xs font-medium tracking-wider text-stone-500 uppercase">
             / 100
           </span>
         </div>
       </div>
 
       {label && (
-        <span
-          className="text-sm font-semibold tracking-wide"
-          style={{ color }}
-        >
+        <span className="text-sm font-semibold tracking-wide" style={{ color }}>
           {label}
         </span>
       )}

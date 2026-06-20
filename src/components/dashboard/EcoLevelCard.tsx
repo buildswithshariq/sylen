@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { m as motion } from 'framer-motion';
-import type { UserEcoLevel } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
+import { m as motion } from "framer-motion";
+import type { UserEcoLevel } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
 
 interface EcoLevelCardProps {
   ecoLevel: UserEcoLevel;
@@ -11,7 +11,7 @@ interface EcoLevelCardProps {
 
 export default function EcoLevelCard({
   ecoLevel,
-  className = '',
+  className = "",
 }: EcoLevelCardProps) {
   const { current, next, pointsToNext, progressPercent } = ecoLevel;
 
@@ -33,7 +33,7 @@ export default function EcoLevelCard({
           initial={{ scale: 0, rotate: -30 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 200,
             damping: 15,
             delay: 0.5,
@@ -44,13 +44,10 @@ export default function EcoLevelCard({
 
         {/* Level Name */}
         <div className="text-center">
-          <h2
-            className="text-xl font-bold"
-            style={{ color: current.color }}
-          >
+          <h2 className="text-xl font-bold" style={{ color: current.color }}>
             {current.name}
           </h2>
-          <p className="mt-0.5 text-xs text-stone-400">
+          <p className="mt-0.5 text-xs text-stone-500">
             Score range: {current.minScore}–{current.maxScore}
           </p>
         </div>
@@ -80,8 +77,8 @@ export default function EcoLevelCard({
 
             {/* Label */}
             <div className="flex items-center justify-between text-xs">
-              <span className="text-stone-400">
-                {pointsToNext} pts to{' '}
+              <span className="text-stone-500">
+                {pointsToNext} pts to{" "}
                 <span className="font-semibold" style={{ color: next.color }}>
                   {next.badge} {next.name}
                 </span>

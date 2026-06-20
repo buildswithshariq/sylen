@@ -1,7 +1,7 @@
-import * as constants from './constants';
+import * as constants from "./constants";
 
-describe('constants', () => {
-  it('exports all expected constant objects', () => {
+describe("constants", () => {
+  it("exports all expected constant objects", () => {
     expect(constants.TRANSPORT_FACTORS).toBeDefined();
     expect(constants.GRID_EMISSION_FACTOR).toBeDefined();
     expect(constants.AC_POWER_KW).toBeDefined();

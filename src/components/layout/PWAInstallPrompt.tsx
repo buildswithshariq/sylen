@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { m as motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { m as motion, AnimatePresence } from "framer-motion";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
+    outcome: "accepted" | "dismissed";
     platform: string;
   }>;
   prompt(): Promise<void>;
 }
 
 export default function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
@@ -23,10 +24,10 @@ export default function PWAInstallPrompt() {
       setShowPrompt(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener("beforeinstallprompt", handler);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener("beforeinstallprompt", handler);
     };
   }, []);
 
@@ -55,7 +56,10 @@ export default function PWAInstallPrompt() {
             <div className="text-3xl">🌱</div>
             <div className="flex-1">
               <h4 className="font-semibold text-stone-900">Install Sylen</h4>
-              <p className="text-xs text-stone-500 mt-1 mb-3">Add to your home screen for faster access and an app-like experience.</p>
+              <p className="text-xs text-stone-500 mt-1 mb-3">
+                Add to your home screen for faster access and an app-like
+                experience.
+              </p>
               <div className="flex gap-2">
                 <button
                   onClick={handleInstall}
@@ -71,13 +75,24 @@ export default function PWAInstallPrompt() {
                 </button>
               </div>
             </div>
-            <button 
-              onClick={handleDismiss} 
+            <button
+              onClick={handleDismiss}
               aria-label="Dismiss install prompt"
-              className="text-stone-400 hover:text-stone-600 transition-colors -mt-1 -mr-1"
+              className="text-stone-500 hover:text-stone-600 transition-colors -mt-1 -mr-1"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                aria-hidden="true"
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>

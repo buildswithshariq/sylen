@@ -1,13 +1,15 @@
-'use client';
+"use client";
 
-import { type ReactNode } from 'react';
-import { m as motion, type HTMLMotionProps } from 'framer-motion';
+import { type ReactNode } from "react";
+import { m as motion, type HTMLMotionProps } from "framer-motion";
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps
-  extends Omit<HTMLMotionProps<'button'>, 'children' | 'disabled'> {
+interface ButtonProps extends Omit<
+  HTMLMotionProps<"button">,
+  "children" | "disabled"
+> {
   children: ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -18,20 +20,19 @@ interface ButtonProps
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20',
+    "bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20",
   secondary:
-    'bg-white/60 backdrop-blur-sm text-gray-800 border border-white/30 hover:bg-white/80',
-  ghost:
-    'bg-transparent text-gray-600 hover:text-gray-800 hover:bg-white/40',
+    "bg-white/60 backdrop-blur-sm text-gray-800 border border-white/30 hover:bg-white/80",
+  ghost: "bg-transparent text-gray-600 hover:text-gray-800 hover:bg-white/40",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg gap-1.5',
-  md: 'px-5 py-2.5 text-sm rounded-xl gap-2',
-  lg: 'px-7 py-3 text-base rounded-xl gap-2.5',
+  sm: "px-3 py-1.5 text-sm rounded-lg gap-1.5",
+  md: "px-5 py-2.5 text-sm rounded-xl gap-2",
+  lg: "px-7 py-3 text-base rounded-xl gap-2.5",
 };
 
-const disabledStyles = 'opacity-50 cursor-not-allowed pointer-events-none';
+const disabledStyles = "opacity-50 cursor-not-allowed pointer-events-none";
 
 function Spinner() {
   return (
@@ -61,11 +62,11 @@ function Spinner() {
 
 export default function Button({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   loading = false,
   disabled = false,
-  className = '',
+  className = "",
   ...motionProps
 }: ButtonProps) {
   const isDisabled = disabled || loading;
@@ -76,11 +77,11 @@ export default function Button({
         inline-flex items-center justify-center font-medium transition-colors
         ${variantStyles[variant]}
         ${sizeStyles[size]}
-        ${isDisabled ? disabledStyles : ''}
+        ${isDisabled ? disabledStyles : ""}
         ${className}
       `}
       whileTap={isDisabled ? undefined : { scale: 0.97 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
       disabled={isDisabled}
       aria-busy={loading}
       {...motionProps}

@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/Skeleton';
-import GlassCard from '@/components/ui/GlassCard';
+import { Skeleton } from "@/components/ui/Skeleton";
+import GlassCard from "@/components/ui/GlassCard";
 
 export default function DashboardSkeleton() {
   return (
@@ -20,7 +20,6 @@ export default function DashboardSkeleton() {
 
         {/* Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 lg:gap-10">
-          
           {/* Row 1 */}
           <div className="md:col-span-4 h-full">
             <GlassCard className="h-[280px] p-6 flex flex-col items-center justify-center space-y-4">
@@ -29,7 +28,7 @@ export default function DashboardSkeleton() {
               <Skeleton className="h-4 w-32 rounded-md" />
             </GlassCard>
           </div>
-          
+
           <div className="md:col-span-4 h-full">
             <GlassCard className="h-[280px] p-6 flex flex-col items-center justify-center space-y-4">
               <Skeleton className="h-24 w-24 rounded-full" />
@@ -37,7 +36,7 @@ export default function DashboardSkeleton() {
               <Skeleton className="h-4 w-3/4 rounded-md" />
             </GlassCard>
           </div>
-          
+
           <div className="md:col-span-4 h-full">
             <GlassCard className="h-[280px] p-6 space-y-6">
               <Skeleton className="h-6 w-40 rounded-lg" />
@@ -65,7 +64,6 @@ export default function DashboardSkeleton() {
               <Skeleton className="h-40 w-full rounded-xl" />
             </GlassCard>
           </div>
-
         </div>
       </div>
     </div>

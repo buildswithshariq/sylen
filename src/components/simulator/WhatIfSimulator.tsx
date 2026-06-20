@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { m as motion, AnimatePresence } from 'framer-motion';
-import { WhatIfResult, WhatIfScenario } from '@/types';
+import { m as motion, AnimatePresence } from "framer-motion";
+import { WhatIfResult, WhatIfScenario } from "@/types";
 
 interface WhatIfSimulatorProps {
   scenarios: WhatIfScenario[];
@@ -39,37 +39,52 @@ export default function WhatIfSimulator({
               onClick={() => onToggleScenario(scenario.id)}
               className={`w-full text-left p-3 rounded-xl transition-all duration-200 border relative ${
                 isSelected
-                  ? 'bg-emerald-50/80 border-emerald-500 shadow-sm'
-                  : 'bg-white/40 border-white/30 hover:bg-white/60 hover:border-emerald-200'
+                  ? "bg-emerald-50/80 border-emerald-500 shadow-sm"
+                  : "bg-white/40 border-white/30 hover:bg-white/60 hover:border-emerald-200"
               }`}
             >
               {isSelected && (
                 <div className="absolute top-3 right-3 text-emerald-600">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 </div>
               )}
               <div className="flex items-center gap-2 pr-6">
                 <span className="text-lg">{scenario.icon}</span>
                 <div>
-                  <p className={`text-sm font-medium ${isSelected ? 'text-emerald-900' : 'text-stone-800'}`}>
+                  <p
+                    className={`text-sm font-medium ${isSelected ? "text-emerald-900" : "text-stone-800"}`}
+                  >
                     {scenario.label}
                   </p>
-                <p className="text-xs text-stone-500">{scenario.description}</p>
+                  <p className="text-xs text-stone-500">
+                    {scenario.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          </button>
-        );
-      })}
-    </div>
+            </button>
+          );
+        })}
+      </div>
 
       {/* Result Display */}
       <AnimatePresence>
         {result && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
@@ -140,7 +155,7 @@ export default function WhatIfSimulator({
               {/* Clear */}
               <button
                 onClick={onClear}
-                className="w-full text-xs text-stone-400 hover:text-stone-600 transition-colors pt-1"
+                className="w-full text-xs text-stone-500 hover:text-stone-600 transition-colors pt-1"
               >
                 Clear simulation
               </button>
@@ -150,7 +165,7 @@ export default function WhatIfSimulator({
       </AnimatePresence>
 
       {scenarios.length === 0 && (
-        <p className="text-xs text-stone-400 text-center py-4">
+        <p className="text-xs text-stone-500 text-center py-4">
           Complete the assessment to unlock scenarios
         </p>
       )}

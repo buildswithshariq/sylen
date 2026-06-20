@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
-import { m as motion, useInView } from 'framer-motion';
-import type { CategoryContribution, EmissionCategory } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
+import { useRef } from "react";
+import { m as motion, useInView } from "framer-motion";
+import type { CategoryContribution, EmissionCategory } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
 
 interface EmissionBreakdownProps {
   contributions: CategoryContribution[];
@@ -16,24 +16,24 @@ const categoryConfig: Record<
   { icon: string; color: string; trackColor: string }
 > = {
   transport: {
-    icon: '🚗',
-    color: '#0284c7',     // sky-600
-    trackColor: 'rgba(2, 132, 199, 0.1)',
+    icon: "🚗",
+    color: "#0284c7", // sky-600
+    trackColor: "rgba(2, 132, 199, 0.1)",
   },
   energy: {
-    icon: '⚡',
-    color: '#d97706',     // amber-600
-    trackColor: 'rgba(217, 119, 6, 0.1)',
+    icon: "⚡",
+    color: "#d97706", // amber-600
+    trackColor: "rgba(217, 119, 6, 0.1)",
   },
   food: {
-    icon: '🥬',
-    color: '#16a34a',     // green-600
-    trackColor: 'rgba(22, 163, 74, 0.1)',
+    icon: "🥬",
+    color: "#16a34a", // green-600
+    trackColor: "rgba(22, 163, 74, 0.1)",
   },
   lifestyle: {
-    icon: '🛍️',
-    color: '#7c3aed',    // violet-600
-    trackColor: 'rgba(124, 58, 237, 0.1)',
+    icon: "🛍️",
+    color: "#7c3aed", // violet-600
+    trackColor: "rgba(124, 58, 237, 0.1)",
   },
 };
 
@@ -56,19 +56,33 @@ function BarRow({
       {/* Label Row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className={compact ? 'text-base' : 'text-lg'} role="img" aria-hidden="true">
+          <span
+            className={compact ? "text-base" : "text-lg"}
+            role="img"
+            aria-hidden="true"
+          >
             {config.icon}
           </span>
-          <span className={`${compact ? 'text-xs' : 'text-sm'} font-medium text-stone-700`}>
+          <span
+            className={`${compact ? "text-xs" : "text-sm"} font-medium text-stone-700`}
+          >
             {contribution.label}
           </span>
         </div>
-        <div className={`flex items-center gap-2 ${compact ? 'text-xs' : 'text-sm'}`}>
+        <div
+          className={`flex items-center gap-2 ${compact ? "text-xs" : "text-sm"}`}
+        >
           <span className="font-semibold text-stone-600">
-            {contribution.amount.toLocaleString('en-US')}{' '}
-            <span className={`${compact ? 'text-[10px]' : 'text-xs'} font-normal text-stone-400`}>kg</span>
+            {contribution.amount.toLocaleString("en-US")}{" "}
+            <span
+              className={`${compact ? "text-[10px]" : "text-xs"} font-normal text-stone-500`}
+            >
+              kg
+            </span>
           </span>
-          <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-stone-400`}>
+          <span
+            className={`${compact ? "text-[10px]" : "text-xs"} text-stone-500`}
+          >
             ({contribution.percentage}%)
           </span>
         </div>
@@ -76,7 +90,7 @@ function BarRow({
 
       {/* Bar */}
       <div
-        className={`${compact ? 'h-1.5' : 'h-2.5'} w-full overflow-hidden rounded-full`}
+        className={`${compact ? "h-1.5" : "h-2.5"} w-full overflow-hidden rounded-full`}
         style={{ backgroundColor: config.trackColor }}
       >
         <motion.div
@@ -97,11 +111,11 @@ function BarRow({
 
 export default function EmissionBreakdown({
   contributions,
-  className = '',
+  className = "",
   compact,
 }: EmissionBreakdownProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   // Sort by amount descending for visual priority
   const sorted = [...contributions].sort((a, b) => b.amount - a.amount);
@@ -122,7 +136,7 @@ export default function EmissionBreakdown({
         </h2>
       )}
 
-      <div ref={ref} className={`flex flex-col ${compact ? 'gap-3' : 'gap-5'}`}>
+      <div ref={ref} className={`flex flex-col ${compact ? "gap-3" : "gap-5"}`}>
         {sorted.map((contribution, i) => (
           <BarRow
             key={contribution.category}

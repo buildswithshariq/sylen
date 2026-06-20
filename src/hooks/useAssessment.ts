@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
   AssessmentData,
   AssessmentFormState,
@@ -9,37 +9,37 @@ import {
   EnergyData,
   FoodData,
   LifestyleData,
-} from '@/types';
+} from "@/types";
 
-const STORAGE_KEY = 'sylen-assessment';
+const STORAGE_KEY = "sylen-assessment";
 
 const defaultTransport: TransportData = {
-  vehicleType: 'car',
-  fuelType: 'gasoline',
+  vehicleType: "car",
+  fuelType: "gasoline",
   dailyDistanceKm: 20,
 };
 
 const defaultEnergy: EnergyData = {
   monthlyElectricityKwh: 300,
   acHoursPerDay: 4,
-  applianceUsage: 'medium',
+  applianceUsage: "medium",
 };
 
 const defaultFood: FoodData = {
-  dietType: 'mixed',
+  dietType: "mixed",
   meatMealsPerWeek: 5,
-  foodWaste: 'some',
+  foodWaste: "some",
 };
 
 const defaultLifestyle: LifestyleData = {
   flightsPerYear: 2,
-  shoppingFrequency: 'monthly',
-  recyclingHabit: 'sometimes',
-  displayName: '',
+  shoppingFrequency: "monthly",
+  recyclingHabit: "sometimes",
+  displayName: "",
 };
 
 function loadFromStorage(): AssessmentFormState | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -51,9 +51,8 @@ function loadFromStorage(): AssessmentFormState | null {
 }
 
 function saveToStorage(state: AssessmentFormState) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   try {
-
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // Ignore storage errors
@@ -63,10 +62,16 @@ function saveToStorage(state: AssessmentFormState) {
 /**
  * Validate whether a step has all required data.
  */
-function isStepDataValid(step: AssessmentStep, data: Partial<AssessmentData>): boolean {
+function isStepDataValid(
+  step: AssessmentStep,
+  data: Partial<AssessmentData>,
+): boolean {
   switch (step) {
     case 0:
-      return !!(data.transport?.vehicleType && data.transport?.dailyDistanceKm !== undefined);
+      return !!(
+        data.transport?.vehicleType &&
+        data.transport?.dailyDistanceKm !== undefined
+      );
     case 1:
       return !!(
         data.energy?.monthlyElectricityKwh !== undefined &&
@@ -158,10 +163,8 @@ export function useAssessment() {
   }, []);
 
   const nextStep = useCallback(() => {
-
     setState((prev) => {
       if (prev.currentStep >= 3) {
-
         return { ...prev, isComplete: true };
       }
       return {
@@ -182,7 +185,7 @@ export function useAssessment() {
     (step?: AssessmentStep) => {
       return isStepDataValid(step ?? state.currentStep, state.data);
     },
-    [state.currentStep, state.data]
+    [state.currentStep, state.data],
   );
 
   const resetAssessment = useCallback(() => {
@@ -197,7 +200,7 @@ export function useAssessment() {
       isComplete: false,
     };
     setState(newState);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, []);
