@@ -3,19 +3,7 @@
 import { m as motion } from "framer-motion";
 import TransitionLink from "@/components/ui/TransitionLink";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" as const },
-  }),
-};
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
 
 // Premium 2D Hero Illustration replacing the 3D globe
 function HeroIllustration() {
