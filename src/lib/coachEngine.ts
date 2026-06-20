@@ -101,7 +101,7 @@ ${breakdownStr}
 **Food:** ${assessment.food.dietType.replace("_", " ")} diet, ${assessment.food.meatMealsPerWeek} meat meals/week
 **Lifestyle:** ${assessment.lifestyle.flightsPerYear} flights/year, shops ${assessment.lifestyle.shoppingFrequency}, recycles ${assessment.lifestyle.recyclingHabit}
 
-${!isChampion ? `**Top Recommended Actions:**\n${topRecs}\n` : ""}
+${isChampion ? "" : `**Top Recommended Actions:**\n${topRecs}\n`}
 ${responsibilities}
 
 ## RULES — FOLLOW STRICTLY
@@ -110,9 +110,9 @@ ${responsibilities}
 3. Be encouraging, specific, and actionable.
 4. Keep responses concise (2-4 paragraphs max).
 5. Use the user's actual data to personalize every response.
-${!isChampion ? "6. Suggest specific actions from the recommendations list when relevant." : "6. Focus on celebrating their existing good habits."}
+${isChampion ? "6. Focus on celebrating their existing good habits." : "6. Suggest specific actions from the recommendations list when relevant."}
 7. Use emojis sparingly for warmth.
-${!isChampion ? "8. When asked about improvements, reference the estimated savings from recommendations." : ""}
+${isChampion ? "" : "8. When asked about improvements, reference the estimated savings from recommendations."}
 9. If asked something outside sustainability/environment, politely redirect.
 10. Format responses with short paragraphs for readability.
 11. Always identify yourself as "Sprout Coach AI" — never as a generic AI.`;
@@ -198,11 +198,16 @@ export function getFallbackResponse(
   }
 
   if (containsAny(msg, ["energy", "electric", "ac"])) {
-    return `Your home energy use contributes ${context.score.breakdown.energy.toLocaleString()} kg CO₂e/year. ${context.assessment.energy.acHoursPerDay > 4 ? `With ${context.assessment.energy.acHoursPerDay} hours of daily AC usage, reducing by even 1-2 hours could save hundreds of kg CO₂e annually.` : "Your energy usage is moderate. Focus on efficient appliances and LED lighting for further savings."}`;
+    const acMessage = context.assessment.energy.acHoursPerDay > 4 ? `With ${context.assessment.energy.acHoursPerDay} hours of daily AC usage, reducing by even 1-2 hours could save hundreds of kg CO₂e annually.` : "Your energy usage is moderate. Focus on efficient appliances and LED lighting for further savings.";
+    return `Your home energy use contributes ${context.score.breakdown.energy.toLocaleString()} kg CO₂e/year. ${acMessage}`;
   }
 
   if (containsAny(msg, ["food", "diet", "meat"])) {
-    return `Your food choices account for ${context.score.breakdown.food.toLocaleString()} kg CO₂e/year. ${context.assessment.food.dietType === "heavy_meat" ? "Even small reductions in meat consumption can have a big impact. Try starting with one meat-free day per week." : context.assessment.food.dietType === "vegan" ? "Your plant-based diet is one of the most impactful choices — well done!" : "Consider incorporating more plant-based meals into your routine."}`;
+    let foodMessage = "Consider incorporating more plant-based meals into your routine.";
+    if (context.assessment.food.dietType === "heavy_meat") foodMessage = "Even small reductions in meat consumption can have a big impact. Try starting with one meat-free day per week.";
+    else if (context.assessment.food.dietType === "vegan") foodMessage = "Your plant-based diet is one of the most impactful choices — well done!";
+
+    return `Your food choices account for ${context.score.breakdown.food.toLocaleString()} kg CO₂e/year. ${foodMessage}`;
   }
 
   return `Your sustainability score is **${context.score.score}/100**. I can help you understand your carbon footprint, explain your results, or suggest specific actions to improve. Try asking about your biggest emission sources, how to improve your score, or specific areas like transport, energy, or food!`;

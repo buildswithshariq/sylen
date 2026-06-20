@@ -32,16 +32,11 @@ export default function SproutIsland({ tier }: SproutIslandProps) {
 
   // Helper to determine what parts of the tree to show
   const showTrunk = tier !== "sapling";
-  const canopyLevel =
-    tier === "sapling"
-      ? 0
-      : tier === "young"
-        ? 1
-        : tier === "growing"
-          ? 2
-          : tier === "thriving"
-            ? 3
-            : 4;
+  let canopyLevel = 4;
+  if (tier === "sapling") canopyLevel = 0;
+  else if (tier === "young") canopyLevel = 1;
+  else if (tier === "growing") canopyLevel = 2;
+  else if (tier === "thriving") canopyLevel = 3;
 
   return (
     <div className="relative w-24 h-28 sm:w-32 sm:h-36 select-none pointer-events-none drop-shadow-xl transition-all duration-300">

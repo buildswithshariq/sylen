@@ -176,12 +176,12 @@ function ResourceCard({
   description,
   link,
   featured = false,
-}: {
+}: Readonly<{
   title: string;
   description: string;
   link: string;
   featured?: boolean;
-}) {
+}>) {
   return (
     <motion.div
       variants={{

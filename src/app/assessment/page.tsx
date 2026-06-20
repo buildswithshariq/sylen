@@ -73,15 +73,15 @@ function AssessmentContent() {
     switch (currentStep) {
       case 0:
         return (
-          <TransportStep data={data.transport!} onChange={updateTransport} />
+          <TransportStep data={data.transport ?? {}} onChange={updateTransport} />
         );
       case 1:
-        return <EnergyStep data={data.energy!} onChange={updateEnergy} />;
+        return <EnergyStep data={data.energy ?? {}} onChange={updateEnergy} />;
       case 2:
-        return <FoodStep data={data.food!} onChange={updateFood} />;
+        return <FoodStep data={data.food ?? {}} onChange={updateFood} />;
       case 3:
         return (
-          <LifestyleStep data={data.lifestyle!} onChange={updateLifestyle} />
+          <LifestyleStep data={data.lifestyle ?? {}} onChange={updateLifestyle} />
         );
       default:
         return null;

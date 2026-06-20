@@ -33,22 +33,21 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const ctaText = isLoaded
-    ? isComplete
-      ? "Retake Assessment"
-      : "Take Assessment"
-    : "Take Assessment";
+  let ctaText = "Take Assessment";
+  if (isLoaded && isComplete) {
+    ctaText = "Retake Assessment";
+  }
   const ctaHref = "/assessment";
 
   const handleReAssessmentClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (typeof window !== "undefined") {
+    if (typeof globalThis.window !== "undefined") {
       const stored = localStorage.getItem("sylen-assessment");
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
           if (parsed.isComplete) {
             e.preventDefault();
-            const confirmRetake = window.confirm(
+            const confirmRetake = globalThis.window.confirm(
               "Are you sure you want to take a re-assessment? This will remove your previous record.",
             );
             if (confirmRetake) {

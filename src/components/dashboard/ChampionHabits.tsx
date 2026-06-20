@@ -4,7 +4,7 @@ import { m as motion } from "framer-motion";
 import GlassCard from "@/components/ui/GlassCard";
 
 interface ChampionHabitsProps {
-  className?: string;
+  readonly className?: string;
 }
 
 const leadershipTips = [

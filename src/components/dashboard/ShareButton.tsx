@@ -20,7 +20,7 @@ function buildReportData(
 ) {
   const sorted = [...score.contributions].sort((a, b) => a.amount - b.amount);
   const topStrength = sorted[0]?.label || "General Lifestyle";
-  const improvementArea = sorted[sorted.length - 1]?.label || "Energy Usage";
+  const improvementArea = sorted.at(-1)?.label || "Energy Usage";
 
   return {
     displayName: assessmentData?.lifestyle?.displayName || "",

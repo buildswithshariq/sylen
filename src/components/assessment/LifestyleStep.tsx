@@ -4,8 +4,8 @@ import { m as motion } from "framer-motion";
 import type { LifestyleData, ShoppingFrequency, RecyclingHabit } from "@/types";
 
 interface LifestyleStepProps {
-  data: Partial<LifestyleData>;
-  onChange: (data: LifestyleData) => void;
+  readonly data: Partial<LifestyleData>;
+  readonly onChange: (data: LifestyleData) => void;
 }
 
 const SHOPPING_OPTIONS: {

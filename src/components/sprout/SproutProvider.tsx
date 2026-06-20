@@ -25,11 +25,10 @@ export default function SproutProvider() {
         const parsed = JSON.parse(stored) as AssessmentFormState;
         if (
           parsed.isComplete &&
-          parsed.data &&
-          parsed.data.transport &&
-          parsed.data.energy &&
-          parsed.data.food &&
-          parsed.data.lifestyle
+          parsed.data?.transport &&
+          parsed.data?.energy &&
+          parsed.data?.food &&
+          parsed.data?.lifestyle
         ) {
           const assessmentData =
             parsed.data as import("@/types").AssessmentData;

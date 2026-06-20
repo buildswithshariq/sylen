@@ -34,7 +34,15 @@ export default function PriorityActions({
         </p>
       )}
       <div className={compact ? "space-y-2" : "space-y-4"}>
-        {top3.map((rec, i) => (
+        {top3.map((rec, i) => {
+          let difficultyColor = "bg-red-50 text-red-700";
+          if (rec.difficulty === "easy") {
+            difficultyColor = "bg-green-50 text-green-700";
+          } else if (rec.difficulty === "medium") {
+            difficultyColor = "bg-amber-50 text-amber-700";
+          }
+
+          return (
           <motion.div
             key={rec.id}
             initial={{ opacity: 0, y: 10 }}
@@ -75,20 +83,14 @@ export default function PriorityActions({
                   -{rec.estimatedReductionKg.toLocaleString()} kg CO₂/yr
                 </span>
                 <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded-full ${compact ? "text-[10px]" : "text-xs"} font-medium ${
-                    rec.difficulty === "easy"
-                      ? "bg-green-50 text-green-700"
-                      : rec.difficulty === "medium"
-                        ? "bg-amber-50 text-amber-700"
-                        : "bg-red-50 text-red-700"
-                  }`}
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full ${compact ? "text-[10px]" : "text-xs"} font-medium ${difficultyColor}`}
                 >
                   {rec.difficulty}
                 </span>
               </div>
             </div>
           </motion.div>
-        ))}
+        )})}
       </div>
     </Container>
   );

@@ -39,7 +39,7 @@ const defaultLifestyle: LifestyleData = {
 };
 
 function loadFromStorage(): AssessmentFormState | null {
-  if (typeof window === "undefined") return null;
+  if (typeof globalThis.window === "undefined") return null;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -51,7 +51,7 @@ function loadFromStorage(): AssessmentFormState | null {
 }
 
 function saveToStorage(state: AssessmentFormState) {
-  if (typeof window === "undefined") return;
+  if (typeof globalThis.window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
@@ -200,7 +200,7 @@ export function useAssessment() {
       isComplete: false,
     };
     setState(newState);
-    if (typeof window !== "undefined") {
+    if (typeof globalThis.window !== "undefined") {
       localStorage.removeItem(STORAGE_KEY);
     }
   }, []);
