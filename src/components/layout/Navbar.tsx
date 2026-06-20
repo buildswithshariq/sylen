@@ -40,32 +40,34 @@ export default function Navbar() {
   const ctaHref = "/assessment";
 
   const handleReAssessmentClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (typeof globalThis.window !== "undefined") {
-      const stored = localStorage.getItem("sylen-assessment");
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (parsed.isComplete) {
-            e.preventDefault();
-            const confirmRetake = globalThis.window.confirm(
-              "Are you sure you want to take a re-assessment? This will remove your previous record.",
-            );
-            if (confirmRetake) {
-              localStorage.removeItem("sylen-assessment");
-              localStorage.removeItem("eco-score-cache");
-              if (document.startViewTransition) {
-                document.startViewTransition(() =>
-                  router.push("/assessment?retake=true"),
-                );
-              } else {
-                router.push("/assessment?retake=true");
-              }
-            }
-          }
-        } catch {
-          // ignore
-        }
+    if (globalThis.window === undefined) return;
+    
+    const stored = localStorage.getItem("sylen-assessment");
+    if (!stored) return;
+
+    try {
+      const parsed = JSON.parse(stored);
+      if (!parsed.isComplete) return;
+
+      e.preventDefault();
+      const confirmRetake = globalThis.window.confirm(
+        "Are you sure you want to take a re-assessment? This will remove your previous record.",
+      );
+
+      if (!confirmRetake) return;
+
+      localStorage.removeItem("sylen-assessment");
+      localStorage.removeItem("eco-score-cache");
+      
+      const navigate = () => router.push("/assessment?retake=true");
+
+      if (document.startViewTransition) {
+        document.startViewTransition(navigate);
+      } else {
+        navigate();
       }
+    } catch {
+      // ignore
     }
   };
 
@@ -133,7 +135,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 <span className="sr-only">Open main menu</span>
-                {!isMobileMenuOpen ? (
+                {isMobileMenuOpen ? (
                   <svg
                     aria-hidden="true"
                     className="block h-6 w-6"
@@ -145,7 +147,7 @@ export default function Navbar() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
+                      d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
                 ) : (
@@ -160,7 +162,7 @@ export default function Navbar() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
+                      d="M4 6h16M4 12h16M4 18h16"
                     />
                   </svg>
                 )}

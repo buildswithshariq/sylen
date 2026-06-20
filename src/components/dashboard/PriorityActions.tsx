@@ -12,7 +12,7 @@ interface PriorityActionsProps {
 export default function PriorityActions({
   recommendations,
   compact,
-}: PriorityActionsProps) {
+}: Readonly<PriorityActionsProps>) {
   const top3 = recommendations.slice(0, 3);
 
   const Container = compact ? "div" : GlassCard;

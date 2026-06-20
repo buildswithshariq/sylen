@@ -96,7 +96,7 @@ function WeekItem({
 export default function RoadmapCard({
   roadmap,
   className = "",
-}: RoadmapCardProps) {
+}: Readonly<RoadmapCardProps>) {
   return (
     <GlassCard
       className={className}

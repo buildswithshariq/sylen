@@ -13,7 +13,7 @@ interface SproutIslandProps {
   tier: TreeTier;
 }
 
-export default function SproutIsland({ tier }: SproutIslandProps) {
+export default function SproutIsland({ tier }: Readonly<SproutIslandProps>) {
   // Deterministic particle generation to maintain React component purity
   const particles = Array.from({ length: 8 }).map((_, i) => {
     const r1 = (i * 137.5) % 1;

@@ -12,6 +12,28 @@ import { buildChatMessages, getFallbackResponse } from "@/lib/coachEngine";
 
 export const runtime = "nodejs";
 
+function processOpenRouterLine(
+  line: string,
+  controller: ReadableStreamDefaultController,
+): boolean {
+  if (!line.startsWith("data: ")) return false;
+
+  const payload = line.slice(6);
+  if (payload === "[DONE]") return true;
+
+  try {
+    const data = JSON.parse(payload);
+    const text = data.choices?.[0]?.delta?.content;
+    if (text) {
+      controller.enqueue(new TextEncoder().encode(text));
+    }
+  } catch {
+    // Ignore incomplete JSON chunks
+  }
+
+  return false;
+}
+
 async function streamOpenRouter(
   apiKey: string,
   systemPrompt: string,
@@ -72,20 +94,8 @@ async function streamOpenRouter(
     const lines = chunk.split("\n").filter((line) => line.trim() !== "");
 
     for (const line of lines) {
-      if (line.replace(/^data: /, "") === "[DONE]") {
-        return;
-      }
-      if (line.startsWith("data: ")) {
-        try {
-          const data = JSON.parse(line.replace(/^data: /, ""));
-          const text = data.choices[0]?.delta?.content || "";
-          if (text) {
-            controller.enqueue(new TextEncoder().encode(text));
-          }
-        } catch {
-          // Ignore incomplete JSON chunks
-        }
-      }
+      const isDone = processOpenRouterLine(line, controller);
+      if (isDone) return;
     }
   }
 }

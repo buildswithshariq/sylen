@@ -11,7 +11,7 @@ interface SproutCompanionProps {
   context: CoachContext | null;
 }
 
-export default function SproutCompanion({ context }: SproutCompanionProps) {
+export default function SproutCompanion({ context }: Readonly<SproutCompanionProps>) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 

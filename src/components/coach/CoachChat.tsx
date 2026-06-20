@@ -43,7 +43,7 @@ export default function CoachChat({
   onSendMessage,
   onInitialize,
   context,
-}: CoachChatProps) {
+}: Readonly<CoachChatProps>) {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);

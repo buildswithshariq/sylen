@@ -127,7 +127,7 @@ export default function RecommendationList({
   recommendations,
   limit = 5,
   className = "",
-}: RecommendationListProps) {
+}: Readonly<RecommendationListProps>) {
   const sorted = [...recommendations]
     .sort((a, b) => a.priority - b.priority)
     .slice(0, limit);

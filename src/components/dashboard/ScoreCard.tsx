@@ -22,7 +22,7 @@ const categoryBadgeConfig: Record<
   high_impact: { variant: "danger", icon: "⚠️" },
 };
 
-export default function ScoreCard({ score, className = "" }: ScoreCardProps) {
+export default function ScoreCard({ score, className = "" }: Readonly<ScoreCardProps>) {
   const badgeConfig = categoryBadgeConfig[score.category];
   const betterThanAvg = score.comparisonToAverage < 0;
   const comparisonAbs = Math.abs(score.comparisonToAverage);

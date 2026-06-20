@@ -41,7 +41,7 @@ function computeScore(totalEmissionsKg: number): number {
   }
 
   // Beyond the worst threshold
-  const last = SCORE_THRESHOLDS[SCORE_THRESHOLDS.length - 1];
+  const last = SCORE_THRESHOLDS.at(-1)!;
   const overshoot = totalEmissionsKg - last.maxEmissions;
   return Math.max(0, Math.round(last.score - (overshoot / 5000) * last.score));
 }

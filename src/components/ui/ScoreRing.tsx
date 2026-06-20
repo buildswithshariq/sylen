@@ -36,7 +36,7 @@ export default function ScoreRing({
   strokeWidth = 12,
   label,
   className = "",
-}: ScoreRingProps) {
+}: Readonly<ScoreRingProps>) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const clampedScore = Math.max(0, Math.min(100, score));
@@ -44,11 +44,13 @@ export default function ScoreRing({
   const color = getScoreColor(clampedScore);
   const trackColor = getScoreTrackColor(clampedScore);
 
+  const labelSuffix = label ? `, ${label}` : "";
+
   return (
     <div
       className={`flex flex-col items-center gap-2 ${className}`}
       role="img"
-      aria-label={`Sustainability score: ${clampedScore} out of 100${label ? `, ${label}` : ""}`}
+      aria-label={`Sustainability score: ${clampedScore} out of 100${labelSuffix}`}
     >
       <div className="relative" style={{ width: size, height: size }}>
         <svg

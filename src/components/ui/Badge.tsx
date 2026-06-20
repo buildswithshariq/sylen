@@ -33,7 +33,7 @@ export default function Badge({
   icon,
   size = "md",
   className = "",
-}: BadgeProps) {
+}: Readonly<BadgeProps>) {
   return (
     <span
       className={`

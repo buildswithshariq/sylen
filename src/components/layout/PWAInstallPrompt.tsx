@@ -18,11 +18,11 @@ export default function PWAInstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    const handler = ((e: BeforeInstallPromptEvent) => {
       e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setDeferredPrompt(e);
       setShowPrompt(true);
-    };
+    }) as EventListener;
 
     globalThis.window.addEventListener("beforeinstallprompt", handler);
 

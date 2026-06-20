@@ -58,7 +58,7 @@ export function calculateEnergyEmissions(
   const acEmissions = acHoursPerDay * AC_POWER_KW * 365 * GRID_EMISSION_FACTOR;
 
   // Appliance multiplier on base
-  const multiplier = APPLIANCE_MULTIPLIERS[applianceUsage] ?? 1.0;
+  const multiplier = APPLIANCE_MULTIPLIERS[applianceUsage] ?? 1;
 
   return baseElectricity * multiplier + acEmissions;
 }
@@ -72,7 +72,7 @@ export function calculateFoodEmissions(data: AssessmentData["food"]): number {
   const baseEmissions =
     DIET_BASE_EMISSIONS[dietType] ?? DIET_BASE_EMISSIONS.mixed;
   const meatAdjustment = meatMealsPerWeek * MEAT_MEAL_FACTOR;
-  const wasteMultiplier = FOOD_WASTE_MULTIPLIERS[foodWaste] ?? 1.0;
+  const wasteMultiplier = FOOD_WASTE_MULTIPLIERS[foodWaste] ?? 1;
 
   return (baseEmissions + meatAdjustment) * wasteMultiplier;
 }

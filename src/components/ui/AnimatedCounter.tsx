@@ -28,7 +28,7 @@ export default function AnimatedCounter({
   prefix = "",
   decimals = 0,
   className = "",
-}: AnimatedCounterProps) {
+}: Readonly<AnimatedCounterProps>) {
   const [displayValue, setDisplayValue] = useState(0);
   const rafRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);

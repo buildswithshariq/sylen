@@ -33,7 +33,7 @@ function merged(data: Partial<TransportData>): TransportData {
   return { ...defaults, ...data };
 }
 
-export default function TransportStep({ data, onChange }: TransportStepProps) {
+export default function TransportStep({ data, onChange }: Readonly<TransportStepProps>) {
   const current = merged(data);
 
   function update(patch: Partial<TransportData>) {

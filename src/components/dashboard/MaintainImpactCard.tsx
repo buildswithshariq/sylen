@@ -12,7 +12,7 @@ interface MaintainImpactCardProps {
 export default function MaintainImpactCard({
   assessmentData,
   className = "",
-}: MaintainImpactCardProps) {
+}: Readonly<MaintainImpactCardProps>) {
   const habits = [];
 
   if (
@@ -66,7 +66,7 @@ export default function MaintainImpactCard({
         <ul className="space-y-3 mb-8">
           {habits.map((habit, index) => (
             <motion.li
-              key={index}
+              key={habit}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * index }}

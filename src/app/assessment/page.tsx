@@ -144,9 +144,9 @@ function AssessmentContent() {
             onClick={handleNext}
             disabled={!isStepValid()}
             className={`px-8 py-3 min-h-[56px] rounded-xl font-medium transition-all shadow-sm ${
-              !isStepValid()
-                ? "bg-stone-200 text-stone-500 cursor-not-allowed"
-                : "bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md hover:shadow-emerald-600/20 active:scale-[0.98]"
+              isStepValid()
+                ? "bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md hover:shadow-emerald-600/20 active:scale-[0.98]"
+                : "bg-stone-200 text-stone-500 cursor-not-allowed"
             }`}
           >
             {currentStep === 3 ? "Calculate Score" : "Next Step"}

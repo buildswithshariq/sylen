@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import SproutCompanion from "@/components/sprout/SproutCompanion";
+import dynamic from "next/dynamic";
+const SproutCompanion = dynamic(() => import("@/components/sprout/SproutCompanion"), {
+  ssr: false,
+});
 import { AssessmentFormState, CoachContext } from "@/types";
 import { calculateCarbonFootprint } from "@/lib/carbonCalculator";
 import { generateSustainabilityScore } from "@/lib/carbonScoring";

@@ -17,7 +17,7 @@ const timeframes = [
 
 export default function CarbonSavingsTimeline({
   recommendations,
-}: CarbonSavingsTimelineProps) {
+}: Readonly<CarbonSavingsTimelineProps>) {
   // Sum all recommendation reductions (annual) and divide by 12 for monthly
   const totalAnnualReduction = recommendations.reduce(
     (sum, r) => sum + r.estimatedReductionKg,

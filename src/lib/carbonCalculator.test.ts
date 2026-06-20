@@ -191,7 +191,7 @@ describe("carbonCalculator", () => {
       const result = calculateCarbonFootprint(fullData);
       expect(result.transport).toBe(0);
       expect(result.energy).toBe(0);
-      expect(result.food).toBe(Math.round(DIET_BASE_EMISSIONS.vegan * 1.0));
+      expect(result.food).toBe(Math.round(DIET_BASE_EMISSIONS.vegan * 1));
       expect(result.lifestyle).toBe(200); // 200 is shopping rarely + 0 recycling
       expect(result.total).toBe(
         result.transport + result.energy + result.food + result.lifestyle,

@@ -25,7 +25,7 @@ export default function GlassCard({
   hover = false,
   variant = "default",
   ...motionProps
-}: GlassCardProps) {
+}: Readonly<GlassCardProps>) {
   return (
     <motion.div
       className={`${variantClasses[variant]} ${className}`}

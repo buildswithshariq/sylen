@@ -98,28 +98,29 @@ function getEnergyRecommendations(data: AssessmentData): Recommendation[] {
   const { monthlyElectricityKwh, acHoursPerDay, applianceUsage } = data.energy;
 
   if (acHoursPerDay > 6) {
-    recs.push({
-      id: nextId(),
-      title: "Reduce AC usage by 2 hours per day",
-      description: `You use AC for ${acHoursPerDay} hours daily. Reducing by 2 hours saves energy and cuts emissions.`,
-      category: "energy",
-      estimatedReductionKg: Math.round(2 * 1.5 * 365 * 0.42),
-      difficulty: "easy",
-      priority: 1,
-      icon: "❄️",
-    });
-
-    recs.push({
-      id: nextId(),
-      title: "Set AC to 24°C instead of 20°C",
-      description:
-        "Every degree higher saves approximately 6% of AC energy consumption.",
-      category: "energy",
-      estimatedReductionKg: Math.round(acHoursPerDay * 1.5 * 365 * 0.42 * 0.24),
-      difficulty: "easy",
-      priority: 2,
-      icon: "🌡️",
-    });
+    recs.push(
+      {
+        id: nextId(),
+        title: "Reduce AC usage by 2 hours per day",
+        description: `You use AC for ${acHoursPerDay} hours daily. Reducing by 2 hours saves energy and cuts emissions.`,
+        category: "energy",
+        estimatedReductionKg: Math.round(2 * 1.5 * 365 * 0.42),
+        difficulty: "easy",
+        priority: 1,
+        icon: "❄️",
+      },
+      {
+        id: nextId(),
+        title: "Set AC to 24°C instead of 20°C",
+        description:
+          "Every degree higher saves approximately 6% of AC energy consumption.",
+        category: "energy",
+        estimatedReductionKg: Math.round(acHoursPerDay * 1.5 * 365 * 0.42 * 0.24),
+        difficulty: "easy",
+        priority: 2,
+        icon: "🌡️",
+      }
+    );
   } else if (acHoursPerDay > 3) {
     recs.push({
       id: nextId(),
@@ -271,28 +272,29 @@ function getLifestyleRecommendations(data: AssessmentData): Recommendation[] {
   const { flightsPerYear, shoppingFrequency, recyclingHabit } = data.lifestyle;
 
   if (flightsPerYear > 2) {
-    recs.push({
-      id: nextId(),
-      title: `Reduce flights from ${flightsPerYear} to ${Math.max(1, flightsPerYear - 2)} per year`,
-      description:
-        "A single round-trip flight produces about 1.1 tonnes of CO₂e. Fewer flights = major impact.",
-      category: "lifestyle",
-      estimatedReductionKg: 2 * 1100,
-      difficulty: "medium",
-      priority: 1,
-      icon: "✈️",
-    });
-
-    recs.push({
-      id: nextId(),
-      title: "Choose train travel for shorter trips",
-      description: "Trains emit up to 90% less CO₂ per km compared to flying.",
-      category: "lifestyle",
-      estimatedReductionKg: 900,
-      difficulty: "medium",
-      priority: 2,
-      icon: "🚆",
-    });
+    recs.push(
+      {
+        id: nextId(),
+        title: `Reduce flights from ${flightsPerYear} to ${Math.max(1, flightsPerYear - 2)} per year`,
+        description:
+          "A single round-trip flight produces about 1.1 tonnes of CO₂e. Fewer flights = major impact.",
+        category: "lifestyle",
+        estimatedReductionKg: 2 * 1100,
+        difficulty: "medium",
+        priority: 1,
+        icon: "✈️",
+      },
+      {
+        id: nextId(),
+        title: "Choose train travel for shorter trips",
+        description: "Trains emit up to 90% less CO₂ per km compared to flying.",
+        category: "lifestyle",
+        estimatedReductionKg: 900,
+        difficulty: "medium",
+        priority: 2,
+        icon: "🚆",
+      }
+    );
   }
 
   if (shoppingFrequency === "weekly") {

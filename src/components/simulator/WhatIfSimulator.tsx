@@ -17,7 +17,7 @@ export default function WhatIfSimulator({
   result,
   onToggleScenario,
   onClear,
-}: WhatIfSimulatorProps) {
+}: Readonly<WhatIfSimulatorProps>) {
   return (
     <div className="space-y-4">
       <div>

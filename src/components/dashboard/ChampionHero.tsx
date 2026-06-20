@@ -13,7 +13,7 @@ interface ChampionHeroProps {
 export default function ChampionHero({
   score,
   className = "",
-}: ChampionHeroProps) {
+}: Readonly<ChampionHeroProps>) {
   return (
     <GlassCard
       className={`flex flex-col items-center gap-6 bg-gradient-to-br from-emerald-50/40 to-sky-50/40 border-emerald-200/50 shadow-emerald-900/5 ${className}`}

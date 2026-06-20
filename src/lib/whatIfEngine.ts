@@ -101,29 +101,30 @@ export function getPresetScenarios(data: AssessmentData): WhatIfScenario[] {
 
   // Only show car-related scenarios if user drives
   if (data.transport.vehicleType === "car") {
-    scenarios.push({
-      id: "switch-to-transit",
-      label: "Switch to public transit",
-      description: "What if you used public transport instead of driving?",
-      icon: "🚇",
-      modifications: {
-        transport: {
-          vehicleType: "public_transit",
+    scenarios.push(
+      {
+        id: "switch-to-transit",
+        label: "Switch to public transit",
+        description: "What if you used public transport instead of driving?",
+        icon: "🚇",
+        modifications: {
+          transport: {
+            vehicleType: "public_transit",
+          },
         },
       },
-    });
-
-    scenarios.push({
-      id: "switch-to-ev",
-      label: "Switch to electric vehicle",
-      description: "What if you drove an electric car instead?",
-      icon: "⚡",
-      modifications: {
-        transport: {
-          fuelType: "electric",
+      {
+        id: "switch-to-ev",
+        label: "Switch to electric vehicle",
+        description: "What if you drove an electric car instead?",
+        icon: "⚡",
+        modifications: {
+          transport: {
+            fuelType: "electric",
+          },
         },
-      },
-    });
+      }
+    );
   }
 
   // AC reduction scenario

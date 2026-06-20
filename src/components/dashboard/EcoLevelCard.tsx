@@ -12,7 +12,7 @@ interface EcoLevelCardProps {
 export default function EcoLevelCard({
   ecoLevel,
   className = "",
-}: EcoLevelCardProps) {
+}: Readonly<EcoLevelCardProps>) {
   const { current, next, pointsToNext, progressPercent } = ecoLevel;
 
   return (

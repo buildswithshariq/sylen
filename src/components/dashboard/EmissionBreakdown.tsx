@@ -113,7 +113,7 @@ export default function EmissionBreakdown({
   contributions,
   className = "",
   compact,
-}: EmissionBreakdownProps) {
+}: Readonly<EmissionBreakdownProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 

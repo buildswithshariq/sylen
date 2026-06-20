@@ -29,7 +29,7 @@ export const AC_POWER_KW = 1.5;
 /** Appliance usage multipliers on base electricity */
 export const APPLIANCE_MULTIPLIERS: Record<string, number> = {
   low: 0.8,
-  medium: 1.0,
+  medium: 1,
   high: 1.3,
 };
 
@@ -47,7 +47,7 @@ export const MEAT_MEAL_FACTOR = 60;
 
 /** Food waste multipliers */
 export const FOOD_WASTE_MULTIPLIERS: Record<string, number> = {
-  minimal: 1.0,
+  minimal: 1,
   some: 1.1,
   significant: 1.25,
 };

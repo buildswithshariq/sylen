@@ -68,7 +68,7 @@ export default function Button({
   disabled = false,
   className = "",
   ...motionProps
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   const isDisabled = disabled || loading;
 
   return (

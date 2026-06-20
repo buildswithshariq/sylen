@@ -13,7 +13,7 @@ export function getUserEcoLevel(score: number): UserEcoLevel {
   const current =
     ECO_LEVELS.find(
       (level) => score >= level.minScore && score <= level.maxScore,
-    ) ?? ECO_LEVELS[ECO_LEVELS.length - 1]; // Default to lowest
+    ) ?? ECO_LEVELS.at(-1)!; // Default to lowest
 
   // Find next level (the one just above current)
   const currentIndex = ECO_LEVELS.indexOf(current);

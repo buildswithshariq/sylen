@@ -10,7 +10,7 @@ interface CommunityImpactWidgetProps {
 export default function CommunityImpactWidget({
   userEmissionsKg,
   className = "",
-}: CommunityImpactWidgetProps) {
+}: Readonly<CommunityImpactWidgetProps>) {
   // US Average footprint is roughly 16,000 kg CO2e/year
   const avgEmissions = 16000;
 

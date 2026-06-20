@@ -168,46 +168,29 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen pt-20">
             {/* Left — Copy */}
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={stagger}
-              className="space-y-8"
-            >
-              <motion.div variants={fadeUp} custom={0}>
+            <div className="space-y-8">
+              <div className="animate-fade-in-up delay-0">
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700 text-sm font-medium shadow-sm">
                   <span className="text-emerald-600">🌿</span>{" "}
                   <span>Environmental Intelligence Platform</span>
                 </span>
-              </motion.div>
+              </div>
 
-              <motion.h1
-                variants={fadeUp}
-                custom={1}
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-stone-900 leading-[1.1]"
-              >
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-stone-900 leading-[1.1] animate-fade-in-up delay-150">
                 <span className="text-forest">Understand.</span>
                 <br />
                 Track.
                 <br />
                 <span className="text-emerald-700">Reduce.</span>
-              </motion.h1>
+              </h1>
 
-              <motion.p
-                variants={fadeUp}
-                custom={2}
-                className="text-lg sm:text-xl text-stone-600 max-w-lg leading-relaxed"
-              >
+              <p className="text-lg sm:text-xl text-stone-600 max-w-lg leading-relaxed animate-fade-in-up delay-300">
                 Your complete carbon reduction platform. Get actionable
                 insights, simulate lifestyle changes, and build sustainable
                 habits — one step at a time.
-              </motion.p>
+              </p>
 
-              <motion.div
-                variants={fadeUp}
-                custom={3}
-                className="flex flex-wrap gap-4"
-              >
+              <div className="flex flex-wrap gap-4 animate-fade-in-up delay-450">
                 <TransitionLink
                   href="/assessment"
                   className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold 
@@ -239,13 +222,9 @@ export default function Home() {
                 >
                   Learn More
                 </TransitionLink>
-              </motion.div>
+              </div>
 
-              <motion.div
-                variants={fadeUp}
-                custom={4}
-                className="flex items-center gap-8 pt-4"
-              >
+              <div className="flex items-center gap-8 pt-4 animate-fade-in-up delay-600">
                 <div>
                   <p className="text-2xl font-bold text-stone-800">5+</p>
                   <p className="text-xs text-stone-500">Impact Categories</p>
@@ -260,8 +239,8 @@ export default function Home() {
                   <p className="text-2xl font-bold text-stone-800">∞</p>
                   <p className="text-xs text-stone-500">What-If Scenarios</p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* Right — 2D Illustration */}
             <motion.div

@@ -28,7 +28,7 @@ function merged(data: Partial<EnergyData>): EnergyData {
   return { ...defaults, ...data };
 }
 
-export default function EnergyStep({ data, onChange }: EnergyStepProps) {
+export default function EnergyStep({ data, onChange }: Readonly<EnergyStepProps>) {
   const current = merged(data);
 
   function update(patch: Partial<EnergyData>) {

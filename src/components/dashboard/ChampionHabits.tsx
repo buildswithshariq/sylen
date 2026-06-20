@@ -51,7 +51,7 @@ export default function ChampionHabits({
       <div className="space-y-4">
         {leadershipTips.map((tip, index) => (
           <motion.div
-            key={index}
+            key={tip.title}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 * index }}

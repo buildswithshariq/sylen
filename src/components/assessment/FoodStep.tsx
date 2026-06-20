@@ -39,7 +39,7 @@ function merged(data: Partial<FoodData>): FoodData {
   return { ...defaults, ...data };
 }
 
-export default function FoodStep({ data, onChange }: FoodStepProps) {
+export default function FoodStep({ data, onChange }: Readonly<FoodStepProps>) {
   const current = merged(data);
 
   function update(patch: Partial<FoodData>) {

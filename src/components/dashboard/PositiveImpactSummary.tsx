@@ -14,7 +14,7 @@ export default function PositiveImpactSummary({
   totalEmissions,
   comparisonToAverage,
   className = "",
-}: PositiveImpactSummaryProps) {
+}: Readonly<PositiveImpactSummaryProps>) {
   // US Average is around 16000 kg
   const averageEmissions = 16000;
   const preventedEmissions = Math.max(0, averageEmissions - totalEmissions);
